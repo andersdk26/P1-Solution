@@ -1,0 +1,3 @@
+C:/Users/ander/CLionProjects/P1-Solution/cmake-build-debug/CMakeFiles/P1_Solution.dir
+C:/Users/ander/CLionProjects/P1-Solution/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/ander/CLionProjects/P1-Solution/cmake-build-debug/CMakeFiles/rebuild_cache.dir
