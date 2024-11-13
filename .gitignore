@@ -1,3 +1,7 @@
-cmake-build-debug
 .git
 .idea
+
+cmake-build-debug/*
+!cmake-build-debug/src
+cmake-build-debug/src/*
+!cmake-build-debug/src/P1_Solution*
