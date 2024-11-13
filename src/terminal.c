@@ -1,8 +1,8 @@
-//
-// Created by ander on 13-11-2024.
-//
-
 #include "terminal.h"
+
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 void box_message(const char message[]) {
     const int messageLength = strlen(message);
@@ -13,13 +13,15 @@ void box_message(const char message[]) {
     int breaks[boxHeight-1];
     int breakIndex = boxWidth;
     for (int n = 0; n < boxHeight; n++) {
+        int x = 0;
         while (message[breakIndex] != ' ') {
             breakIndex--;
+            x ++;
         }
 
         breaks[n] = breakIndex;
         printf("%d\n", breakIndex);
-        breakIndex += boxWidth;
+        breakIndex += boxWidth+x;
     }
 
     // Top side of text box.

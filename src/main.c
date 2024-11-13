@@ -17,6 +17,8 @@ int main(void) {
     location_s startLocation, endLocation;
     preference_e enviormentPreference;
 
+    box_message(MESSAGE);
+
     // print_introduction();
 
     // get_journey(&startLocation, &endLocation);
