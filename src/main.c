@@ -17,6 +17,9 @@ int main(void) {
     location_s startLocation, endLocation;
     preference_e enviormentPreference;
 
+    FILE *trainTableFile = open_file("../../data/train.csv","r");
+    printf("%d", get_file_lines(trainTableFile));
+
     // print_introduction();
 
     // get_journey(&startLocation, &endLocation);
