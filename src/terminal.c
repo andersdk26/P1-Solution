@@ -9,8 +9,15 @@
 void box_message(const char message[]) {
     const int messageLength = strlen(message);
     const int messagePadding = 3;
-    const int boxWidth = 20;
-    const int boxHeight = ceil(messageLength / (double) boxWidth);
+    int boxWidth = 20;
+    if (boxWidth < get_length_of_longest_word(message)) {
+        printf("WARNING: 'boxWidth' is less than the length of the longest word in the message and has been adjusted.\n");
+        boxWidth = get_length_of_longest_word(message);
+    }
+
+    // TODO sæt boxHeight til antal ord i beskeden.
+    //const int boxHeight = ceil(messageLength / (double) boxWidth);
+    const int boxHeight = 46;
 
     int breaks[boxHeight - 1];
     int breakIndex = boxWidth - 1;
@@ -20,7 +27,6 @@ void box_message(const char message[]) {
         }
 
         breaks[n] = breakIndex;
-        printf("%d\n", breakIndex);
         breakIndex += boxWidth;
     }
 
@@ -59,8 +65,13 @@ void box_message(const char message[]) {
                     } else {
                         printf(" ");
                     }
+                } else {
+                    printf(" ");
                 }
             }
+        }
+        if (n > messageLength) {
+            i = boxHeight - 1;
         }
     }
 
@@ -70,4 +81,22 @@ void box_message(const char message[]) {
         printf("%c", 205);
     }
     printf("%c", 188);
+}
+
+int get_length_of_longest_word(const char message[]) {
+    int lengthOfLongestWord = 0;
+    int n = 0;
+
+    for (int i = 0; i < strlen(message); i++) {
+        if (message[i] == ' ') {
+            if (n > lengthOfLongestWord) {
+                lengthOfLongestWord = n;
+            }
+            n = -1;
+        } else {
+            n++;
+        }
+    }
+
+    return lengthOfLongestWord;
 }
