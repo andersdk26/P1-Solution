@@ -3,4 +3,4 @@ project(P1_Solution C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(P1_Solution main.c)
+add_subdirectory(src)
