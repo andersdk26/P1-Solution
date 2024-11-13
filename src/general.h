@@ -45,11 +45,12 @@ typedef enum {
     wc_light_purple_hgl = 0xD7,
     wc_light_yellow_hgl = 0xE7,
     wc_bright_white_hgl = 0xF7,
-} winColor_t;
+} winColor_e;
 
 void set_win_color(unsigned int color);
-winColor_t merge_win_color(const winColor_t color, const winColor_t highlighter);
+winColor_e merge_win_color(winColor_e color, winColor_e highlighter);
 void cls(void);
 void delay(clock_t millis);
 void swap_int(int *p1, int *p2);
+void print_warning(const char *msg);
 #endif //GENERAL_H
