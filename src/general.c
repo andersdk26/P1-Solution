@@ -4,7 +4,7 @@
  * Sets text color in Windows terminal
  * @param color Color code
  */
-void set_win_color(const winColor_t color) {
+void set_win_color(const winColor_e color) {
 #ifdef _WINDOWS_
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     //static const WORD standardColor = 0x07;
@@ -18,8 +18,8 @@ void set_win_color(const winColor_t color) {
  * @param color Color code
  * @param highlighter Highlighter color code
  */
-winColor_t merge_win_color(const winColor_t color, const winColor_t highlighter) {
-    winColor_t result = highlighter & 0xf0;
+winColor_e merge_win_color(const winColor_e color, const winColor_e highlighter) {
+    winColor_e result = highlighter & 0xf0;
     result |= color;
     return result;
 }
@@ -48,4 +48,14 @@ void swap_int(int *p1, int *p2) {
     *p1 = *p1 ^ *p2;
     *p2 = *p1 ^ *p2;
     *p1 = *p1 ^ *p2;
+}
+
+/**
+ * Prints warning (in yellow)
+ * @param msg String to print
+ */
+void print_warning(const char *msg) {
+    set_win_color(wc_yellow);
+    printf("%s", msg);
+    set_win_color(wc_default);
 }
