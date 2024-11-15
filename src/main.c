@@ -5,20 +5,21 @@
 
 #include "main.h"
 #include "dataHandling.h"
+#include "general.h"
 #include "terminal.h"
 
 void print_introduction(const char message[]);
-void get_journey(location_s *start, location_s *end);
+void get_journey(route_s *start, route_s *end);
 void get_preferences(void);
 void get_result(void);
 void print_table(void);
 
 int main(void) {
-    location_s startLocation, endLocation;
+    route_s route;
     preference_e enviormentPreference;
 
-    FILE *trainTableFile = open_file("../../data/train.csv","r");
-    printf("%d", get_file_lines(trainTableFile));
+    route = search_file("Bravo",NULL,TRAIN_CSV_PATH);
+    printf("%s", route.origin);
 
     // print_introduction();
 
