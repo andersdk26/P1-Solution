@@ -6,10 +6,10 @@
 
 #include "general.h"
 
-void box_message(const char message[]) {
+void box_message(const char message[], const char title[]) {
     const int messageLength = strlen(message);
-    const int messagePadding = 3;
-    int boxWidth = 20;
+    const int messagePadding = 2;
+    int boxWidth = 32;
     if (boxWidth < get_length_of_longest_word(message)) {
         printf("WARNING: 'boxWidth' is less than the length of the longest word in the message and has been adjusted.\n");
         boxWidth = get_length_of_longest_word(message);
@@ -17,7 +17,7 @@ void box_message(const char message[]) {
 
     // TODO sæt boxHeight til antal ord i beskeden.
     //const int boxHeight = ceil(messageLength / (double) boxWidth);
-    const int boxHeight = 46;
+    const int boxHeight = 1;
 
     int breaks[boxHeight - 1];
     int breakIndex = boxWidth - 1;
@@ -32,8 +32,18 @@ void box_message(const char message[]) {
 
     // Top side of text box.
     printf("%c", 201);
-    for (int i = 0; i < boxWidth + 2 * messagePadding; i++) {
-        printf("%c", 205);
+    printf("%c ", 181);
+    printf("\033[1m");
+
+    for (int i = 0; i < boxWidth + 2 * messagePadding - 3; i++) {
+        if (i < strlen(title)) {
+            printf("%c", title[i]);
+        } else if (i == strlen(title)) {
+            printf("\033[0m");
+            printf(" %c", 198);
+        } else {
+            printf("%c", 205);
+        }
     }
     printf("%c\n", 187);
 
@@ -55,7 +65,7 @@ void box_message(const char message[]) {
                 }
                 printf("%c\n", 186);
             } else {
-                if (n <= messageLength) {
+                if (n - 1 <= messageLength) {
                     if (n < breaks[i]) {
                         printf("%c", message[n]);
                         n++;
@@ -80,7 +90,7 @@ void box_message(const char message[]) {
     for (int i = 0; i < boxWidth + 2 * messagePadding; i++) {
         printf("%c", 205);
     }
-    printf("%c", 188);
+    printf("%c\n", 188);
 }
 
 int get_length_of_longest_word(const char message[]) {
