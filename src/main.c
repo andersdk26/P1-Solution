@@ -19,9 +19,10 @@ int main(void) {
     preference_e environmentPreference;
 
     // Print instructions.
-    box_message(introduction, "Welcome");
+    box_print(MESSAGE, "Welcome");
 
-    box_message("", "Start");
+    /*
+    box_output("", "Start");
 
     hstdin = GetStdHandle(STD_INPUT_HANDLE);
 
@@ -47,6 +48,8 @@ int main(void) {
     printf("\033[2E");
 
     box_message("", "Destination");
+
+    */
 
     // get_journey(&startLocation, &endLocation);
 
