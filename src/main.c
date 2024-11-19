@@ -11,8 +11,8 @@
 
 void print_introduction(const char message[]);
 
-HANDLE hstdin;
-DWORD mode;
+//HANDLE hstdin;
+//DWORD mode;
 
 int main(void) {
     location_s startLocation, endLocation;
@@ -21,35 +21,14 @@ int main(void) {
     // Print instructions.
     box_print(MESSAGE, "Welcome");
 
-    /*
-    box_output("", "Start");
-
-    hstdin = GetStdHandle(STD_INPUT_HANDLE);
-
-    GetConsoleMode(hstdin, &mode);
-    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
-
-    printf("\033[7;3H");
-
-    int i = 0;
-    char c;
-    while (i <= 32) {
-        printf("\033[5;%dH", i + 3);
-        printf("");
-        scanf("%c", &c);
-
-        if (c == 8) {
-            i--;
-        } else {
-            printf("%c", c);
-            i++;
-        }
+    // Read input.
+    char *x = box_read("Input");
+    if (x == NULL) {
+        perror("Error");
+        exit(EXIT_FAILURE);
     }
-    printf("\033[2E");
-
-    box_message("", "Destination");
-
-    */
+    printf(x);
+    free(x);
 
     // get_journey(&startLocation, &endLocation);
 
