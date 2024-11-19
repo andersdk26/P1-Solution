@@ -3,11 +3,11 @@
 
 void box_print(const char message[], const char title[]);
 
-char *box_read();
+char *box_read(const char title[]);
 
-void print_top_of_box(int width, const char title[]);
+void print_top_of_box(const char title[]);
 
-void print_bottom_of_box(int width);
+void print_bottom_of_box();
 
 int length_of_longest_word(const char message[]);
 
