@@ -1,7 +1,7 @@
 #ifndef GENERAL_H
 #define GENERAL_H
 
-const char TRAIN_CSV_PATH[] = "../../data/train.csv";
+static const char TRAIN_CSV_PATH[] = "../../data/train.csv";
 
 #include <stdio.h>
 #include <stdlib.h>

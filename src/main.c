@@ -16,7 +16,7 @@ void print_introduction(const char message[]);
 //DWORD mode;
 
 int main(void) {
-    location_s startLocation, endLocation;
+    route_s startLocation, endLocation;
     preference_e environmentPreference;
 
     // Print instructions.
