@@ -59,3 +59,10 @@ void print_warning(const char *msg) {
     printf("%s", msg);
     set_win_color(wc_default);
 }
+
+void check_input(const char *input) {
+    if (input == NULL) {
+        perror("Error");
+        exit(EXIT_FAILURE);
+    }
+}

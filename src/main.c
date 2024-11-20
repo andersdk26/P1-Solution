@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 #include <math.h>
 #include <string.h>
 
@@ -7,31 +8,40 @@
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"
+#include "journey.h"
 
 void print_introduction(const char message[]);
-void get_journey(route_s *start, route_s *end);
-void get_preferences(void);
-void get_result(void);
-void print_table(void);
+
+//HANDLE hstdin;
+//DWORD mode;
 
 int main(void) {
-    route_s route;
-    preference_e enviormentPreference;
+    location_s startLocation, endLocation;
+    preference_e environmentPreference;
 
-    route = search_file("Bravo",NULL,TRAIN_CSV_PATH);
-    printf("%s", route.origin);
+    // Print instructions.
+    box_print(MESSAGE, "Welcome");
 
-    // print_introduction();
+    // Get start location.
+    char *inputStart = box_read("Start");
+    check_input(inputStart);
+    free(inputStart);
+
+    // Get destination.
+    char *inputDestination = box_read("Destination");
+    check_input(inputDestination);
+    free(inputDestination);
 
     // get_journey(&startLocation, &endLocation);
 
     // get_preferences();
-    
+
     // get_result();
-    
+
     // print_table();
 
-    // while (1) {}
+    while (1) {
+    }
 
     return EXIT_SUCCESS;
 }
