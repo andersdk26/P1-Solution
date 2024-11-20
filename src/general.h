@@ -48,8 +48,14 @@ typedef enum {
 } winColor_t;
 
 void set_win_color(unsigned int color);
+
 winColor_t merge_win_color(const winColor_t color, const winColor_t highlighter);
+
 void cls(void);
+
 void delay(clock_t millis);
+
 void swap_int(int *p1, int *p2);
+
+void check_input(const char *input);
 #endif //GENERAL_H

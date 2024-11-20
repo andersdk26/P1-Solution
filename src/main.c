@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "dataHandling.h"
+#include "general.h"
 #include "terminal.h"
 #include "journey.h"
 
@@ -21,14 +22,15 @@ int main(void) {
     // Print instructions.
     box_print(MESSAGE, "Welcome");
 
-    // Read input.
-    char *x = box_read("Input");
-    if (x == NULL) {
-        perror("Error");
-        exit(EXIT_FAILURE);
-    }
-    printf(x);
-    free(x);
+    // Get start location.
+    char *inputStart = box_read("Start");
+    check_input(inputStart);
+    free(inputStart);
+
+    // Get destination.
+    char *inputDestination = box_read("Destination");
+    check_input(inputDestination);
+    free(inputDestination);
 
     // get_journey(&startLocation, &endLocation);
 

@@ -106,14 +106,20 @@ void box_print(const char message[], const char title[]) {
 }
 
 char *box_read(const char title[]) {
+    // Print the top of the box.
     print_top_of_box(title);
+
+    // Print the left and right side of the box with spaces in between.
     printf("%c", 186);
     for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
         printf(" ");
     }
     printf("%c\n", 186);
+
+    // Print the bottom of the box.
     print_bottom_of_box();
 
+    // Move the cursor 2 rows up and 1 + padding columns to the right.
     printf("\033[2A");
     printf("\033[%dC", 1 + BOX_PADDING);
 

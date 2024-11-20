@@ -49,3 +49,10 @@ void swap_int(int *p1, int *p2) {
     *p2 = *p1 ^ *p2;
     *p1 = *p1 ^ *p2;
 }
+
+void check_input(const char *input) {
+    if (input == NULL) {
+        perror("Error");
+        exit(EXIT_FAILURE);
+    }
+}
