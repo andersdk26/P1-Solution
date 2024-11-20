@@ -174,7 +174,7 @@ void print_top_of_box(const char title[]) {
         printf("%c", 205);
         i++;
     }
-    
+
     printf("%c\n", 187);
 }
 
