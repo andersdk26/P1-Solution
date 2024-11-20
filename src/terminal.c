@@ -42,7 +42,7 @@ void box_print(const char message[], const char title[]) {
         //     }
         // }
 
-        while (message[breakIndex] != ' ' && breakIndex > 0) {
+        while (message[breakIndex] != ' ' && message[breakIndex + 1] != ' ') {
             breakIndex--;
         }
 
@@ -70,9 +70,12 @@ void box_print(const char message[], const char title[]) {
 
             // Otherwise, print characters from message.
             if (n < messageLength) {
-                if (n < breaks[i]) {
-                    // printf("%d", n);
-                    printf("%c", message[n]);
+                if (n <= breaks[i]) {
+                    //printf("%d", n%16);
+                    if (n % BOX_WIDTH == 0 && message[n] == ' ') {
+                    } else {
+                        printf("%c", message[n]);
+                    }
                     n++;
                 } else {
                     printf("^");
@@ -138,7 +141,7 @@ char *box_read(const char title[]) {
             }
         }
 
-        if (i < 32 && c != 8) {
+        if (i < BOX_WIDTH && c != 8) {
             printf("%c", c);
             input[i] = c;
             i++;
@@ -154,16 +157,24 @@ void print_top_of_box(const char title[]) {
     printf("%c ", 181);
     printf("\033[1m");
 
-    for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING - 3; i++) {
+    int i = 0;
+
+    for (i = 0; i < BOX_WIDTH; i++) {
         if (i < strlen(title)) {
             printf("%c", title[i]);
-        } else if (i == strlen(title)) {
-            printf("\033[0m");
-            printf(" %c", 198);
         } else {
-            printf("%c", 205);
+            break;
         }
     }
+
+    printf("\033[0m");
+    printf(" %c", 198);
+
+    while (i < BOX_WIDTH) {
+        printf("%c", 205);
+        i++;
+    }
+    
     printf("%c\n", 187);
 }
 
