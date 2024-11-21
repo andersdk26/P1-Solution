@@ -12,6 +12,7 @@
 //
 // void get_result(void);
 
-route_s *get_train_routes(const char* input_start, const char* input_destination);
+route_s *get_train_routes(const char* input_start, const char* input_destination, route_s **routeList, int *routeListLength);
+route_s *get_plane_routes(const char* input_start, const char* input_destination, route_s **routes, int *routeAmount);
 
 #endif //JOURNEY_H
