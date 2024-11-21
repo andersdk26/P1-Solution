@@ -10,7 +10,7 @@
 
 int main(void) {
     route_s *routes = NULL;
-    int routeQuanitiy = 0;
+    int routeQuantity = 0;
     preference_e environmentPreference;
 
     // Print journey instructions.
@@ -24,16 +24,23 @@ int main(void) {
     char *inputDestination = box_read("Destination", STRING);
     check_input(inputDestination);
 
-    get_train_routes(inputStart, inputDestination, &routes, &routeQuanitiy);
-    get_plane_routes(inputStart, inputDestination, &routes, &routeQuanitiy);
+    get_train_routes(inputStart, inputDestination, &routes, &routeQuantity);
+    get_plane_routes(inputStart, inputDestination, &routes, &routeQuantity);
 
     // Free allocated memory.
     free(inputStart);
     free(inputDestination);
 
-    // Print preferences instructions.
-    box_print(preferencesInstructions, "Preferences");
+    // Print prioritisation instructions.
+    box_print(prioritisationInstructions, "Prioritisation");
 
+    char a;
+    char b;
+    char c;
+
+    get_priorities(&a, &b, &c);
+
+    /*
     // Get time weight.
     char *timeWeight = box_read("Time", NUMBER);
     check_input(timeWeight);
@@ -50,6 +57,8 @@ int main(void) {
     free(timeWeight);
     free(priceWeight);
     free(emissionWeight);
+
+    */
 
     // get_journey(&startLocation, &endLocation);
 
