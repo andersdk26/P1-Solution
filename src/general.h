@@ -54,4 +54,5 @@ void delay(clock_t millis);
 void swap_int(int *p1, int *p2);
 void print_warning(const char *msg);
 void check_input(const char *input);
+void* memory_allocation(void *p, size_t size, int clear);
 #endif //GENERAL_H
