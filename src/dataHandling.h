@@ -3,15 +3,15 @@
 
 #include <stdio.h>
 
-#define LOCATION_STRING_LENGTH 20
 
 typedef struct {
-    char origin[LOCATION_STRING_LENGTH];
-    char destination[LOCATION_STRING_LENGTH];
+    char *origin;
+    char *destination;
 } route_s;
 
+void print_routes(const route_s *list, int length);
 FILE* open_file(const char *fileName, const char *mode);
 int get_file_lines(FILE *file);
-route_s search_file(const char *origin, const char *destination, const char *fileName);
+FILE *search_file(const char *origin, const char *destination, const char *fileName, route_s **routes, int *routeAmount);
 
 #endif //DATAHANDLING_H

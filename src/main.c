@@ -25,6 +25,8 @@ int main(void) {
     char *inputDestination = box_read("Destination");
     check_input(inputDestination);
 
+    get_train_routes(inputStart, inputDestination);
+
     // Free allocated memory.
     free(inputStart);
     free(inputDestination);

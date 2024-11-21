@@ -66,3 +66,32 @@ void check_input(const char *input) {
         exit(EXIT_FAILURE);
     }
 }
+
+/**
+ * Allocates specific memory size
+ * @param p pointer
+ * @param size Size of needed memory bytes
+ * @param clear True if all values should be set to 0
+ * @return Memory pointer
+ */
+void* memory_allocation(void *p, const size_t size, const int clear) {
+    void *lastP = NULL;
+    if (p == NULL) {
+        if (clear) {
+            p = calloc(size, 1);
+        } else {
+            p = malloc(size);
+        }
+    } else {
+        lastP = p;
+        p = realloc(p, size);
+    }
+
+    if (p == NULL) {
+        free(lastP);
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    return p;
+}
