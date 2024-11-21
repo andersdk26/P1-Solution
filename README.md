@@ -25,7 +25,7 @@ Follow these steps to compile and run the program:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/optimal-trip-planner.git
+   git clone https://github.com/andersdk26/P1-Solution
    cd optimal-trip-planner
 
 ## Usage
