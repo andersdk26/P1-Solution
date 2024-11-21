@@ -35,7 +35,7 @@ void box_print(const char message[], const char title[]) {
         }
 
         breaks[n] = breakIndex;
-        printf("%d\n", breaks[n]);
+        //printf("%d\n", breaks[n]);
         breakIndex += BOX_WIDTH;
     }
 
@@ -93,7 +93,7 @@ void box_print(const char message[], const char title[]) {
     print_bottom_of_box(BOX_WIDTH + 2 * BOX_PADDING);
 }
 
-char *box_read(const char title[]) {
+char *box_read(const char title[], enum inputType type) {
     // Print the top of the box.
     print_top_of_box(title);
 
@@ -136,10 +136,12 @@ char *box_read(const char title[]) {
             }
         }
 
-        if (i < BOX_WIDTH && c != 8 && isalnum(c)) {
-            printf("%c", c);
-            input[i] = c;
-            i++;
+        if (i < BOX_WIDTH && c != 8) {
+            if (type == STRING && isalpha(c) || type == NUMBER && isdigit(c)) {
+                printf("%c", c);
+                input[i] = c;
+                i++;
+            }
         }
     }
     input[i + 1] = '\0';
