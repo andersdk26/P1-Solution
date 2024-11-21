@@ -8,8 +8,6 @@
 #include "terminal.h"
 #include "journey.h"
 
-void print_introduction(const char message[]);
-
 int main(void) {
     route_s startLocation, endLocation;
     preference_e environmentPreference;
@@ -18,11 +16,11 @@ int main(void) {
     box_print(journeyInstructions, "Journey");
 
     // Get start location.
-    char *inputStart = box_read("Start");
+    char *inputStart = box_read("Start", STRING);
     check_input(inputStart);
 
     // Get destination.
-    char *inputDestination = box_read("Destination");
+    char *inputDestination = box_read("Destination", STRING);
     check_input(inputDestination);
 
     // Free allocated memory.
@@ -33,15 +31,15 @@ int main(void) {
     box_print(preferencesInstructions, "Preferences");
 
     // Get time weight.
-    char *timeWeight = box_read("Time");
+    char *timeWeight = box_read("Time", NUMBER);
     check_input(timeWeight);
 
     // Get price weight.
-    char *priceWeight = box_read("Price");
+    char *priceWeight = box_read("Price", NUMBER);
     check_input(priceWeight);
 
     // Get emission weight.
-    char *emissionWeight = box_read("Emission");
+    char *emissionWeight = box_read("Emission", NUMBER);
     check_input(emissionWeight);
 
     // Free allocated memory.

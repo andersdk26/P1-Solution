@@ -1,9 +1,11 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
+enum inputType {STRING, NUMBER};
+
 void box_print(const char message[], const char title[]);
 
-char *box_read(const char title[]);
+char *box_read(const char title[], enum inputType);
 
 void print_top_of_box(const char title[]);
 
