@@ -11,7 +11,8 @@
 void print_introduction(const char message[]);
 
 int main(void) {
-    route_s startLocation, endLocation;
+    route_s *routes = NULL;
+    int routeQuanitiy = 0;
     preference_e environmentPreference;
 
     // Print journey instructions.
@@ -25,7 +26,8 @@ int main(void) {
     char *inputDestination = box_read("Destination");
     check_input(inputDestination);
 
-    get_train_routes(inputStart, inputDestination);
+    get_train_routes(inputStart, inputDestination, &routes, &routeQuanitiy);
+    get_plane_routes(inputStart, inputDestination, &routes, &routeQuanitiy);
 
     // Free allocated memory.
     free(inputStart);

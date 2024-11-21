@@ -5,15 +5,20 @@
 //
 // }
 
-route_s *get_train_routes(const char* input_start, const char* input_destination) {
-    int routeAmount = 0;
-    route_s *routePointer = NULL;
+route_s *get_train_routes(const char* input_start, const char* input_destination, route_s **routes, int *routeAmount) {
 
-    FILE *file = search_file(input_start, input_destination, TRAIN_ROUTES_CSV_PATH, &routePointer, &routeAmount);
+    FILE *file = search_file(input_start, input_destination, TRAIN_ROUTES_CSV_PATH, routes, routeAmount);
 
-    fclose(file);
+    //print_routes(*routes, *routeAmount);
 
-    print_routes(routePointer, routeAmount);
+    return *routes;
+}
 
-    return routePointer;
+route_s *get_plane_routes(const char* input_start, const char* input_destination, route_s **routes, int *routeAmount) {
+
+    FILE *file = search_file(input_start, input_destination, FLIGHT_CSV_PATH, routes, routeAmount);
+
+    //print_routes(*routes, *routeAmount);
+
+    return *routes;
 }
