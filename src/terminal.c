@@ -153,25 +153,47 @@ char *box_read(const char title[], const enum inputType type) {
 }
 
 void get_priorities(char *price, char *time, char *emission) {
+    const char titles[3][10] = {{"Time"}, {"Price"}, {"Emission"}};
 
+    print_top_of_priority_boxes(titles);
+
+    print_bottom_of_priority_boxes(titles);
+}
+
+void print_top_of_priority_boxes(const char titles[3][10]) {
+    set_win_color(wc_gray);
+
+    for (int i = 0; i < 3; i++) {
+        printf("%c%c \033[1m", 201, 181);
+        set_win_color(wc_light_blue);
+        printf(titles[i]);
+        printf("\033[0m");
+        set_win_color(wc_gray);
+        printf(" %c%c", 198, 187);
+    }
+    printf("\n");
+}
+
+void print_bottom_of_priority_boxes(const char titles[3][10]) {
+    set_win_color(wc_gray);
+
+    for (int i = 0; i < 3; i++) {
+        printf("%c", 200);
+        for (int j = 0; j < strlen(titles[i]) + 4; j++) {
+            printf("%c", 205);
+        }
+        printf("%c", 188);
+    }
+
+    printf("\n");
 }
 
 void print_top_of_box(const char title[]) {
     set_win_color(wc_gray);
-    printf("%c", 201);
-    printf("%c ", 181);
-    printf("\033[1m");
+    printf("%c%c \033[1m", 201, 181);
     set_win_color(wc_light_blue);
-    int i = 0;
-
-    for (i = 0; i < BOX_WIDTH; i++) {
-        if (i < strlen(title)) {
-            printf("%c", title[i]);
-        } else {
-            break;
-        }
-    }
-
+    int i = strlen(title);
+    printf(title);
     printf("\033[0m");
     set_win_color(wc_gray);
     printf(" %c", 198);
