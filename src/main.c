@@ -16,8 +16,8 @@ void print_introduction(const char message[]);
 //DWORD mode;
 
 int main(void) {
-    route_s startLocation, endLocation;
-    preference_e environmentPreference;
+    route_s *flights = NULL, *trainRoutes = NULL;
+    preference_e environmentPreference, timePreference, pricePreference;
 
     // Print instructions.
     box_print(MESSAGE, "Welcome");
@@ -25,11 +25,14 @@ int main(void) {
     // Get start location.
     char *inputStart = box_read("Start");
     check_input(inputStart);
-    free(inputStart);
 
     // Get destination.
     char *inputDestination = box_read("Destination");
     check_input(inputDestination);
+
+    trainRoutes = get_train_routes(inputStart, inputDestination);
+
+    free(inputStart);
     free(inputDestination);
 
     // get_journey(&startLocation, &endLocation);
@@ -40,8 +43,7 @@ int main(void) {
 
     // print_table();
 
-    while (1) {
-    }
+    while (1) {}
 
     return EXIT_SUCCESS;
 }
