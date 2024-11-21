@@ -7,6 +7,8 @@ void box_print(const char message[], const char title[]);
 
 char *box_read(const char title[], enum inputType);
 
+void get_priorities(char *price, char *time, char *emission);
+
 void print_top_of_box(const char title[]);
 
 void print_bottom_of_box();

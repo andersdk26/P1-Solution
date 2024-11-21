@@ -93,7 +93,9 @@ void box_print(const char message[], const char title[]) {
     print_bottom_of_box(BOX_WIDTH + 2 * BOX_PADDING);
 }
 
-char *box_read(const char title[], enum inputType type) {
+char *box_read(const char title[], const enum inputType type) {
+    // TODO: Fjern type parameter siden 'box_read' kun bliver brugt til start og destination.
+
     // Print the top of the box.
     print_top_of_box(title);
 
@@ -148,6 +150,10 @@ char *box_read(const char title[], enum inputType type) {
     printf("\033[2E");
     set_win_color(wc_gray);
     return input;
+}
+
+void get_priorities(char *price, char *time, char *emission) {
+
 }
 
 void print_top_of_box(const char title[]) {
