@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <math.h>
+#include <string.h>
 
 #include "main.h"
 #include "dataHandling.h"
@@ -8,44 +10,36 @@
 #include "terminal.h"
 #include "journey.h"
 
+void print_introduction(const char message[]);
+
+//HANDLE hstdin;
+//DWORD mode;
+
 int main(void) {
     route_s startLocation, endLocation;
     preference_e environmentPreference;
 
-    // Print instructions for choosing journey.
-    box_print(journeyInstructions, "Journey");
+    // Print instructions.
+    box_print(MESSAGE, "Welcome");
 
     // Get start location.
     char *inputStart = box_read("Start");
     check_input(inputStart);
+    free(inputStart);
 
     // Get destination.
     char *inputDestination = box_read("Destination");
     check_input(inputDestination);
 
+    trainRoutes = get_train_routes(inputStart, inputDestination);
+
     // Free allocated memory.
     free(inputStart);
     free(inputDestination);
 
-    // Print instructions for weighing preferences.
-    box_print(preferencesInstructions, "Preferences");
+    // get_journey(&startLocation, &endLocation);
 
-    // Get time weight.
-    char *timeWeight = box_read("Time");
-    check_input(timeWeight);
-
-    // Get emission weight.
-    char *emissionWeight = box_read("Emission");
-    check_input(emissionWeight);
-
-    // Get price weight.
-    char *priceWeight = box_read("Price");
-    check_input(priceWeight);
-
-    // Free allocated memory.
-    free(timeWeight);
-    free(emissionWeight);
-    free(priceWeight);
+    // get_preferences();
 
     // get_result();
 
