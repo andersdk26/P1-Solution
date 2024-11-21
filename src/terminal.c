@@ -6,7 +6,7 @@
 
 #include "general.h"
 
-#define BOX_WIDTH 32
+#define BOX_WIDTH 16
 #define BOX_PADDING 2
 
 HANDLE hstdin;
@@ -30,19 +30,7 @@ void box_print(const char message[], const char title[]) {
     int breaks[boxHeight - 1];
     int breakIndex = BOX_WIDTH - 1;
     for (int n = 0; n < boxHeight; n++) {
-        // if (message[breakIndex] != ' ') {
-        // } else if (message[breakIndex + 1] != ' ') {
-        // } else if (breakIndex > 0) {
-        //     breakIndex--;
-        // }
-
-        // while (message[breakIndex] != ' ' || message[breakIndex + 1] != ' ') {
-        //     if (breakIndex > 0) {
-        //         breakIndex--;
-        //     }
-        // }
-
-        while (message[breakIndex] != ' ' && message[breakIndex + 1] != ' ') {
+        while (message[breakIndex] != ' ') {
             breakIndex--;
         }
 
@@ -61,6 +49,7 @@ void box_print(const char message[], const char title[]) {
         // For the width of the box.
         for (int j = 0; j < BOX_WIDTH; j++) {
             // If it's the first iteration, print the left side of the box.
+            set_win_color(wc_gray);
             if (j == 0) {
                 printf("%c", 186);
                 for (int k = 0; k < BOX_PADDING; k++) {
@@ -69,16 +58,14 @@ void box_print(const char message[], const char title[]) {
             }
 
             // Otherwise, print characters from message.
+            set_win_color(wc_bright_white);
             if (n < messageLength) {
                 if (n <= breaks[i]) {
                     //printf("%d", n%16);
-                    if (n % BOX_WIDTH == 0 && message[n] == ' ') {
-                    } else {
-                        printf("%c", message[n]);
-                    }
+                    printf("%c", message[n]);
                     n++;
                 } else {
-                    printf("^");
+                    printf(" ");
                     n = breaks[i] + 1;
                 }
             } else {
@@ -87,6 +74,7 @@ void box_print(const char message[], const char title[]) {
             }
 
             // If it's the last iteration, print the right side of the box.
+            set_win_color(wc_gray);
             if (j == BOX_WIDTH - 1) {
                 for (int k = 0; k < BOX_PADDING; k++) {
                     printf(" ");
@@ -131,6 +119,7 @@ char *box_read(const char title[]) {
     int i = 0;
     char c;
     char *input = malloc(BOX_WIDTH + 1);
+    set_win_color(wc_bright_white);
 
     while (1) {
         scanf("%c", &c);
@@ -140,14 +129,14 @@ char *box_read(const char title[]) {
                 printf("\033[1D");
                 printf(" ");
                 printf("\033[1D");
-                input[i] = "";
+                input[i] = '\0';
                 i--;
-            } else if (c == 13) {
+            } else if (c == 46) {
                 break;
             }
         }
 
-        if (i < BOX_WIDTH && c != 8) {
+        if (i < BOX_WIDTH && c != 8 && isalnum(c)) {
             printf("%c", c);
             input[i] = c;
             i++;
@@ -155,14 +144,16 @@ char *box_read(const char title[]) {
     }
     input[i + 1] = '\0';
     printf("\033[2E");
+    set_win_color(wc_gray);
     return input;
 }
 
 void print_top_of_box(const char title[]) {
+    set_win_color(wc_gray);
     printf("%c", 201);
     printf("%c ", 181);
     printf("\033[1m");
-
+    set_win_color(wc_light_blue);
     int i = 0;
 
     for (i = 0; i < BOX_WIDTH; i++) {
@@ -174,6 +165,7 @@ void print_top_of_box(const char title[]) {
     }
 
     printf("\033[0m");
+    set_win_color(wc_gray);
     printf(" %c", 198);
 
     while (i < BOX_WIDTH) {
