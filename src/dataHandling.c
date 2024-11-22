@@ -114,6 +114,8 @@ int compare_trips(const void *a, const void *b, void *param) {
     return 0;
 }
 
+void qsort_r(Trip * trip, size_t size, unsigned long long size1, int(* compare_trips)(const void *a, const void *b, void *param), int * priorities);
+
 void sort_trips(Trip *trips, size_t num_trips, int *priorities) {
     qsort_r(trips, num_trips, sizeof(Trip), compare_trips, priorities);
 }
