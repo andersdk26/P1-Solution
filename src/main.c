@@ -40,6 +40,9 @@ int main(void) {
     char emission = '\0';
     get_priorities(&price, &time, &emission);
 
+    // int priorities[] = {1, 2, 3};
+    // sort_trips(trips, num_trips, priorities);
+
     // get_journey(&startLocation, &endLocation);
 
     // get_result();
