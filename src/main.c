@@ -23,10 +23,9 @@ int main(void) {
     char *inputDestination = box_read("Destination", STRING);
     check_input(inputDestination);
 
-    strcpy(inputStart,"Berlin");
-    strcpy(inputDestination,"Frankfurt");
-    get_train_routes(inputStart, inputDestination, &routes, &routeQuantity);
-    get_plane_routes(inputStart, inputDestination, &routes, &routeQuantity);
+    get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
+    get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
+    qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
     print_routes(routes, routeQuantity);
 

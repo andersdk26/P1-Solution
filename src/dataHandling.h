@@ -27,10 +27,10 @@ int get_file_lines(FILE *file);
 void append_route(route_s **routeList, int *routeListLength, const char *originStr, const char *destinationStr,
                   const char *originNameStr, const char *destinationNameStr, int travelTime, int emission,
                   int price, int downtime, transportType_e transportType);
-void get_specific_routes(const char *originQuery, const char *destinationQuery, const char *fileName,
-    transportType_e transportType, route_s **routes, int *routeAmount);
+void get_all_routes(const char *fileName, transportType_e transportType, route_s **routes, int *routeAmount);
 void search_column_string(int columnNo, const char *query, const char *fileName, char **stringList,
     int *stringListLength);
 void free_string_list(char **stringList, int stringListLength, int dynamicList);
 void free_route_list(route_s *routeList, int routeListLength, int dynamicList);
+int alphabetic_route_compare(const void *vp1, const void *vp2);
 #endif //DATAHANDLING_H

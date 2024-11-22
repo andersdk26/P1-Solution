@@ -12,7 +12,4 @@
 //
 // void get_result(void);
 
-void get_train_routes(const char* origin, const char* destination, route_s **routeList, int *routeListLength);
-void get_plane_routes(const char* origin, const char* destination, route_s **routeList, int *routeListLength);
-
 #endif //JOURNEY_H

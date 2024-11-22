@@ -95,20 +95,13 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
 /**
  * Searches for specific route in a file and appends resulting object to routes
  * (File should be alphabetically ordered)
- * @param originQuery Origin to search for
- * @param destinationQuery Destination to search for
  * @param fileName File to search in
  * @param transportType Transportation type in file
  * @param routes Pointer to route list
  * @param routeAmount Pointer to route list length
  */
-void get_specific_routes(const char *originQuery, const char *destinationQuery, const char *fileName,
-    const transportType_e transportType, route_s **routes, int *routeAmount) {
+void get_all_routes(const char *fileName, const transportType_e transportType, route_s **routes, int *routeAmount) {
     FILE* file = open_file(fileName, "r");
-
-    // Searches for route with the binary search algorithm
-
-    // Findes first occurrence of route
 
     // Temporary strings
     const int lineLength = 200;
@@ -121,12 +114,6 @@ void get_specific_routes(const char *originQuery, const char *destinationQuery, 
         sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,]",
             originStr, destinationStr, originNameStr, destinationNameStr,
             travelTimeStr, emissionStr, priceStr, downtimeStr);
-
-        // return if next object doesn't include route query
-        if (strcmp(originQuery,originStr) != 0 || strcmp(destinationQuery,destinationStr) != 0) {
-            fclose(file);
-            return;
-        }
 
         // parse parameter values and append them to routes
         append_route(routes, routeAmount,
@@ -141,9 +128,14 @@ void get_specific_routes(const char *originQuery, const char *destinationQuery, 
     fclose(file);
 }
 
-void search_first_column_string(const char *query, const char *fileName,
-    char **stringList, int *stringListLength) {
-    
+void search_first_column(const char *query, char **stringList, int *stringListLength,
+    const route_s *routes, const int routeAmount) {
+    const char *query2 = query; // todo edit
+    for (int i = 0; i < routeAmount; ++i) {
+        if (strcmp(query,routes[i].origin) < 0 && strcmp(query,routes[i].origin) >) {
+
+        }
+    }
 }
 
 void free_string_list(char **stringList, const int stringListLength, const int dynamicList) {
@@ -165,4 +157,17 @@ void free_route_list(route_s *routeList, const int routeListLength, const int dy
     if (dynamicList) {
         free(routeList);
     }
+}
+
+int alphabetic_route_compare(const void *vp1, const void *vp2) {
+    const route_s *route1 = (route_s *)vp1;
+    const route_s *route2 = (route_s *)vp2;
+
+    const int result = strcmp(route1->origin, route2->origin);
+    if (result != 0) {
+        return result;
+    }
+
+    return strcmp(route1->destination, route2->destination);
+
 }
