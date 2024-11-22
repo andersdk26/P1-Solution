@@ -41,6 +41,7 @@ int main(void) {
     get_priorities(&price, &time, &emission);
 
     // int priorities[] = {1, 2, 3};
+
     // sort_trips(trips, num_trips, priorities);
 
     // get_journey(&startLocation, &endLocation);
