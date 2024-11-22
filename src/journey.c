@@ -5,20 +5,24 @@
 //
 // }
 
-route_s *get_train_routes(const char* input_start, const char* input_destination, route_s **routes, int *routeAmount) {
-
-    FILE *file = search_file(input_start, input_destination, TRAIN_ROUTES_CSV_PATH, routes, routeAmount);
-
-    //print_routes(*routes, *routeAmount);
-
-    return *routes;
+/**
+ * Appends train routes to list
+ * @param origin Origin of route
+ * @param destination Destination of route
+ * @param routeList List to append objects to
+ * @param routeListLength Length of list
+ */
+void get_train_routes(const char* origin, const char* destination, route_s **routeList, int *routeListLength) {
+    get_specific_routes(origin, destination, TRAIN_ROUTES_CSV_PATH, tt_train, routeList, routeListLength);
 }
 
-route_s *get_plane_routes(const char* input_start, const char* input_destination, route_s **routes, int *routeAmount) {
-
-    FILE *file = search_file(input_start, input_destination, FLIGHT_CSV_PATH, routes, routeAmount);
-
-    //print_routes(*routes, *routeAmount);
-
-    return *routes;
+/**
+ * Appends flights to list
+ * @param origin Origin of route
+ * @param destination Destination of route
+ * @param routeList List to append objects to
+ * @param routeListLength Length of list
+ */
+void get_plane_routes(const char* origin, const char* destination, route_s **routeList, int *routeListLength) {
+    get_specific_routes(origin, destination, FLIGHT_CSV_PATH, tt_plane, routeList, routeListLength);
 }

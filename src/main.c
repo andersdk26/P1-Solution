@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
 #include "main.h"
 #include "dataHandling.h"
@@ -24,8 +23,12 @@ int main(void) {
     char *inputDestination = box_read("Destination", STRING);
     check_input(inputDestination);
 
+    strcpy(inputStart,"Berlin");
+    strcpy(inputDestination,"Frankfurt");
     get_train_routes(inputStart, inputDestination, &routes, &routeQuantity);
     get_plane_routes(inputStart, inputDestination, &routes, &routeQuantity);
+
+    print_routes(routes, routeQuantity);
 
     // Free allocated memory.
     free(inputStart);
