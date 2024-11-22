@@ -39,6 +39,9 @@ int main(void) {
     char c;
 
     get_priorities(&a, &b, &c);
+    int priorities[] = {1, 2, 3};
+
+    sort_trips(trips, num_trips, priorities);
 
     /*
     // Get time weight.

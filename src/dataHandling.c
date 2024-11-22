@@ -90,22 +90,31 @@ typedef struct Journey {
     int environmental_impact;
 } Trip;
 
-int compare_trips(const void *a, const void *b) {
+int compare_trips(const void *a, const void *b, void *param) {
     const Trip *trip_a = (const Trip *)a;
     const Trip *trip_b = (const Trip *)b;
+    int *priorities = (int *)param;
 
-    if (trip_a->price < trip_b->price) return -1;
-    if (trip_a->price > trip_b->price) return 1;
-
-    if (trip_a->duration < trip_b->duration) return -1;
-    if (trip_a->duration > trip_b->duration) return 1;
-
-    if (trip_a->environmental_impact < trip_b->environmental_impact) return -1;
-    if (trip_a->environmental_impact > trip_b->environmental_impact) return 1;
-
+    for (int i = 0; i < 3; ++i) {
+        switch (priorities[i]) {
+            case 1:
+                if (trip_a->price < trip_b->price) return -1;
+            if (trip_a->price > trip_b->price) return 1;
+            break;
+            case 2:
+                if (trip_a->duration < trip_b->duration) return -1;
+            if (trip_a->duration > trip_b->duration) return 1;
+            break;
+            case 3:
+                if (trip_a->environmental_impact > trip_b->environmental_impact) return -1;
+            if (trip_a->environmental_impact < trip_b->environmental_impact) return 1;
+            break;
+        }
+    }
     return 0;
 }
 
-void sort_trips(Trip *trips, size_t num_trips) {
-    qsort(trips, num_trips, sizeof(Trip), compare_trips);
+void sort_trips(Trip *trips, size_t num_trips, int *priorities) {
+    qsort_r(trips, num_trips, sizeof(Trip), compare_trips, priorities);
 }
+
