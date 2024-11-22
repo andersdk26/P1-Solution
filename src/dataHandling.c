@@ -141,7 +141,7 @@ void get_specific_routes(const char *originQuery, const char *destinationQuery, 
     fclose(file);
 }
 
-void search_column_string(const int columnNo, const char *query, const char *fileName,
+void search_first_column_string(const char *query, const char *fileName,
     char **stringList, int *stringListLength) {
     
 }
