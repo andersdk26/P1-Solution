@@ -5,11 +5,15 @@ enum inputType {STRING, NUMBER};
 
 void box_print(const char message[], const char title[]);
 
-char *box_read(const char title[], enum inputType);
+char *box_read(const char title[]);
 
 void get_priorities(char *price, char *time, char *emission);
 
+void read_characters(char *input);
+
 void print_top_of_priority_boxes(const char titles[3][10]);
+
+void print_middle_of_priority_boxes(const char titles[3][10]);
 
 void print_bottom_of_priority_boxes(const char titles[3][10]);
 
