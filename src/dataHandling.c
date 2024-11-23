@@ -128,16 +128,46 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     fclose(file);
 }
 
-void search_first_column(const char *query, char **stringList, int *stringListLength,
-    const route_s *routes, const int routeAmount) {
-    const char *query2 = query; // todo edit
-    for (int i = 0; i < routeAmount; ++i) {
-        if (strcmp(query,routes[i].origin) < 0 && strcmp(query,routes[i].origin) >) {
+/**
+ * Append string to list
+ * @param str String to append
+ * @param stringList List of strings
+ * @param stringListLength Length of list
+ */
+void append_string(const char *str, char **stringList, int *stringListLength) {
+    (*stringListLength)++;
+    *stringList = memory_allocation(*stringList, *stringListLength,0);
 
+    strcpy((*stringList) + *stringListLength - 1, str);
+}
+
+/**
+ * Findes all instances (partially) matching query in route array
+ * @param query Query to search for 
+ * @param stringList List to insert matches
+ * @param stringListLength Length of list
+ * @param routes Array to search in
+ * @param routeAmount Length of array
+ */
+void search_first_column(const char *query, char **stringList, int *stringListLength,
+                         const route_s *routes, const int routeAmount) {
+    char query2[50];
+    strcpy(query2, query);
+    strcat(query2,"\126");
+
+    for (int i = 0; i < routeAmount; ++i) {
+        if (strcmp(query,routes[i].origin) < 0 && strcmp(query2,routes[i].origin) > 0) {
+            // todo some thing
         }
     }
 }
 
+/**
+ * Frees string list from heap memory
+ * @param stringList List to free
+ * @param stringListLength Length of list
+ * @param dynamicList True for dynamic lists
+ */
 void free_string_list(char **stringList, const int stringListLength, const int dynamicList) {
     for (int i = 0; i < stringListLength; ++i) {
         free(stringList[i]);
@@ -147,6 +177,12 @@ void free_string_list(char **stringList, const int stringListLength, const int d
     }
 }
 
+/**
+ * Frees route list from heap memory
+ * @param routeList List to free
+ * @param routeListLength Length of list
+ * @param dynamicList True for dynamic lists
+ */
 void free_route_list(route_s *routeList, const int routeListLength, const int dynamicList) {
     for (int i = 0; i < routeListLength; ++i) {
         free(routeList[i].origin);
@@ -159,6 +195,12 @@ void free_route_list(route_s *routeList, const int routeListLength, const int dy
     }
 }
 
+/**
+ * Compares two routes alphabetically
+ * @param vp1 Element 1
+ * @param vp2 Element 2
+ * @return 1: E1 > E2, -1: E1 > E2, 0: E1 == E2
+ */
 int alphabetic_route_compare(const void *vp1, const void *vp2) {
     const route_s *route1 = (route_s *)vp1;
     const route_s *route2 = (route_s *)vp2;

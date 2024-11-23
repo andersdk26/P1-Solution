@@ -28,6 +28,7 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
                   const char *originNameStr, const char *destinationNameStr, int travelTime, int emission,
                   int price, int downtime, transportType_e transportType);
 void get_all_routes(const char *fileName, transportType_e transportType, route_s **routes, int *routeAmount);
+void append_string(const char *str, char **stringList, int *stringListLength);
 void search_column_string(int columnNo, const char *query, const char *fileName, char **stringList,
     int *stringListLength);
 void free_string_list(char **stringList, int stringListLength, int dynamicList);
