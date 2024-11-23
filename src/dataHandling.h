@@ -28,9 +28,11 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
                   const char *originNameStr, const char *destinationNameStr, int travelTime, int emission,
                   int price, int downtime, transportType_e transportType);
 void get_all_routes(const char *fileName, transportType_e transportType, route_s **routes, int *routeAmount);
-void append_string(const char *str, char **stringList, int *stringListLength);
-void search_column_string(int columnNo, const char *query, const char *fileName, char **stringList,
-    int *stringListLength);
+void append_string(const char *str, char ***stringList, int *stringListLength);
+void search_first_column(const char *query, char ***stringList, int *stringListLength,
+const route_s *routes, int routeAmount);
+void search_second_column(const char *origin, const char *query, char ***stringList, int *stringListLength,
+                         const route_s *routes, int routeAmount);
 void free_string_list(char **stringList, int stringListLength, int dynamicList);
 void free_route_list(route_s *routeList, int routeListLength, int dynamicList);
 int alphabetic_route_compare(const void *vp1, const void *vp2);

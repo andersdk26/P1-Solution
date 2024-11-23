@@ -12,6 +12,9 @@ int main(void) {
     int routeQuantity = 0;
     preference_e environmentPreference;
 
+    char **str = NULL;
+    int strLength = 0;
+
     // Print journey instructions.
     box_print(journeyInstructions, "Journey");
 
@@ -27,7 +30,24 @@ int main(void) {
     get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
     qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
-    print_routes(routes, routeQuantity);
+    // test search
+    search_first_column("",&str,&strLength,routes,routeQuantity);
+    printf("%d strings:\n", strLength);
+    for (int i = 0; i < strLength; ++i) {
+        printf("%s\n", str[i]);
+    }
+
+    free_string_list(str,strLength,1);
+    str = NULL;
+    strLength = 0;
+
+    search_second_column("Frankfurt","",&str,&strLength,routes,routeQuantity);
+    printf("%d strings:\n", strLength);
+    for (int i = 0; i < strLength; ++i) {
+        printf("%s\n", str[i]);
+    }
+
+    //print_routes(routes, routeQuantity);
 
     // Free allocated memory.
     free(inputStart);

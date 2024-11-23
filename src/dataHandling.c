@@ -134,11 +134,13 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
  * @param stringList List of strings
  * @param stringListLength Length of list
  */
-void append_string(const char *str, char **stringList, int *stringListLength) {
+void append_string(const char *str, char ***stringList, int *stringListLength) {
     (*stringListLength)++;
-    *stringList = memory_allocation(*stringList, *stringListLength,0);
+    *stringList = memory_allocation(*stringList, *stringListLength * sizeof(char*),0);
 
-    strcpy((*stringList) + *stringListLength - 1, str);
+    (*stringList)[*stringListLength - 1] = memory_allocation(NULL,strlen(str) + 1,0);
+
+    strcpy((*stringList)[*stringListLength - 1], str);
 }
 
 /**
@@ -149,17 +151,60 @@ void append_string(const char *str, char **stringList, int *stringListLength) {
  * @param routes Array to search in
  * @param routeAmount Length of array
  */
-void search_first_column(const char *query, char **stringList, int *stringListLength,
+void search_first_column(const char *query, char ***stringList, int *stringListLength,
                          const route_s *routes, const int routeAmount) {
     char query2[50];
     strcpy(query2, query);
-    strcat(query2,"\126");
+    strcat(query2,"~");
 
     for (int i = 0; i < routeAmount; ++i) {
-        if (strcmp(query,routes[i].origin) < 0 && strcmp(query2,routes[i].origin) > 0) {
-            // todo some thing
+        if (i > 0 && strcmp(routes[i-1].origin, routes[i].origin) == 0) {
+            continue;
+        }
+        if (strcmp(query,routes[i].origin) <= 0 && strcmp(query2,routes[i].origin) > 0) {
+            append_string(routes[i].origin,stringList,stringListLength);
         }
     }
+}
+
+
+/**
+ * Findes all instances (partially) matching query in route array
+ * @param origin Origin to match (exsactly)
+ * @param query Query to search for
+ * @param stringList List to insert matches
+ * @param stringListLength Length of list
+ * @param routes Array to search in
+ * @param routeAmount Length of array
+ */
+void search_second_column(const char *origin, const char *query, char ***stringList, int *stringListLength,
+                         const route_s *routes, const int routeAmount) {
+    char query2[50];
+    strcpy(query2, query);
+    strcat(query2,"~");
+
+    for (int i = 0; i < routeAmount; ++i) {
+        if (strcmp(origin, routes[i].origin) != 0) {
+            continue;
+        }
+        if (i > 0 && strcmp(routes[i-1].destination, routes[i].destination) == 0) {
+            continue;
+        }
+        if (strcmp(query,routes[i].destination) <= 0 && strcmp(query2,routes[i].destination) > 0) {
+            append_string(routes[i].destination,stringList,stringListLength);
+        }
+    }
+}
+
+void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
+    for (int i = 0; i < *routeAmount;) {
+        if (strcmp((*routes)[i].origin,origin) != 0 || strcmp((*routes)[i].destination,destination) != 0) {
+            i++;
+            continue;
+        }
+        // pop function
+    }
+
 }
 
 /**
