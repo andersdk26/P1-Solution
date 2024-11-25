@@ -47,6 +47,9 @@ int main(void) {
         printf("%s\n", str[i]);
     }
 
+    remove_mismatches("Frankfurt", "Hamburg", &routes, &routeQuantity);
+    print_routes(routes, routeQuantity);
+
     //print_routes(routes, routeQuantity);
 
     // Free allocated memory.
@@ -59,7 +62,6 @@ int main(void) {
     char a;
     char b;
     char c;
-
     get_priorities(&a, &b, &c);
 
     /*

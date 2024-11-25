@@ -91,6 +91,20 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
     strcpy(object->destinationName, destinationNameStr);
 }
 
+void remove_route(route_s **routeList, int *routeListLength, const int index) {
+    free((*routeList)[index].origin);
+    free((*routeList)[index].destination);
+    free((*routeList)[index].originName);
+    free((*routeList)[index].destinationName);
+
+    for (int i = index; i < *routeListLength - 1; ++i) {
+        (*routeList)[i] = (*routeList)[i+1];
+    }
+
+    (*routeListLength)--;
+    *routeList= memory_allocation(*routeList, *routeListLength * sizeof(route_s),0);
+}
+
 // todo: error handling
 /**
  * Searches for specific route in a file and appends resulting object to routes
@@ -169,8 +183,8 @@ void search_first_column(const char *query, char ***stringList, int *stringListL
 
 
 /**
- * Findes all instances (partially) matching query in route array
- * @param origin Origin to match (exsactly)
+ * Finds all instances (partially) matching query in route array
+ * @param origin Origin to match (exactly)
  * @param query Query to search for
  * @param stringList List to insert matches
  * @param stringListLength Length of list
@@ -198,13 +212,12 @@ void search_second_column(const char *origin, const char *query, char ***stringL
 
 void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
     for (int i = 0; i < *routeAmount;) {
-        if (strcmp((*routes)[i].origin,origin) != 0 || strcmp((*routes)[i].destination,destination) != 0) {
+        if (strcmp((*routes)[i].origin,origin) == 0 && strcmp((*routes)[i].destination,destination) == 0) {
             i++;
             continue;
         }
-        // pop function
+        remove_route(routes, routeAmount, i);
     }
-
 }
 
 /**
