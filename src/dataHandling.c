@@ -2,6 +2,7 @@
 #include "general.h"
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
 void print_routes(const route_s *list, const int length) {
     for (int i = 0; i < length; ++i) {
@@ -114,10 +115,8 @@ int compare_trips(const void *a, const void *b, void *param) {
     return 0;
 }
 
-// Er lidt usikker på hvad denne gør, trykkede bare på lampen
-void qsort_r(Trip * trip, size_t size, unsigned long long size1, int(* compare_trips)(const void *a, const void *b, void *param), int * priorities);
 
 void sort_trips(Trip *trips, size_t num_trips, int *priorities) {
-    qsort_r(trips, num_trips, sizeof(Trip), compare_trips, priorities);
+    qsort_s(trips, num_trips, sizeof(Trip), compare_trips, priorities);
 }
 
