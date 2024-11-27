@@ -10,11 +10,12 @@
  * @param length Length of list
  */
 void print_routes(const route_s* list, const int length) {
+    set_win_color(wc_default);
     printf("Printing %d routes:\n", length);
-    printf("%-12s" "%-12s" "%7s" "%7s" "%7s" "\n",
-            "Origin", "Destination", "Time", "Price", "Emmision");
+    printf("%-12s" "%-12s" "%7s" "%8s" "%9s" "\n",
+            "Origin", "Destination", "Time", "Price", "Emission");
     for (int i = 0; i < length; ++i) {
-        printf("%-12s" "%-12s" "  %5d" "  %6.2lf" "  %5d" "\n",
+        printf("%-12s" "%-12s" "  %5d" "  %6.2lf" "   %5d" "\n",
             list[i].origin, list[i].destination, list[i].travelTime, (double)list[i].price / 100, list[i].emission);
     }
 }
