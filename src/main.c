@@ -15,6 +15,7 @@ int main(void) {
     get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
     get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
     qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
+    print_routes(routes, routeQuantity);
 
     // Print journey instructions.
     box_print(journeyInstructions, "Journey");
