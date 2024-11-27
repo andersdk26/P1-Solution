@@ -41,10 +41,11 @@ void delay(const clock_t millis) {
         return;
     }
     const clock_t startTime = clock();
-    while (startTime + millis > clock()) {}
+    while (startTime + millis > clock()) {
+    }
 }
 
-void swap_int(int *p1, int *p2) {
+void swap_int(int* p1, int* p2) {
     *p1 = *p1 ^ *p2;
     *p2 = *p1 ^ *p2;
     *p1 = *p1 ^ *p2;
@@ -54,13 +55,13 @@ void swap_int(int *p1, int *p2) {
  * Prints warning (in yellow)
  * @param msg String to print
  */
-void print_warning(const char *msg) {
+void print_warning(const char* msg) {
     set_win_color(wc_yellow);
     printf("%s", msg);
     set_win_color(wc_default);
 }
 
-void check_input(const char *input) {
+void check_input(const char* input) {
     if (input == NULL) {
         perror("Error");
         exit(EXIT_FAILURE);
@@ -74,15 +75,17 @@ void check_input(const char *input) {
  * @param clear True if all values should be set to 0
  * @return Memory pointer
  */
-void* memory_allocation(void *p, const size_t size, const int clear) {
-    void *lastP = NULL;
+void* memory_allocation(void* p, const size_t size, const int clear) {
+    void* lastP = NULL;
     if (p == NULL) {
         if (clear) {
             p = calloc(size, 1);
-        } else {
+        }
+        else {
             p = malloc(size);
         }
-    } else {
+    }
+    else {
         lastP = p;
         p = realloc(p, size);
     }

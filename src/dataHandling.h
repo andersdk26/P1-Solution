@@ -38,7 +38,7 @@ void remove_mismatches(const char *origin, const char *destination, route_s **ro
 void free_string_list(char **stringList, int stringListLength, int dynamicList);
 void free_route_list(route_s *routeList, int routeListLength, int dynamicList);
 int alphabetic_route_compare(const void *vp1, const void *vp2);
-int compare_trips(const void *a, const void *b, void *param);
-void sort_trips(Trip *trips, size_t num_trips, int *priorities);
+int compare_trips(void *param, const void *a, const void *b);
+void sort_trips(route_s *trips, size_t num_trips, void *priorities);
 
 #endif //DATAHANDLING_H

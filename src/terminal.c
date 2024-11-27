@@ -6,9 +6,6 @@
 
 #include "general.h"
 
-#define BOX_WIDTH 16
-#define BOX_PADDING 2
-
 HANDLE hstdin;
 DWORD mode;
 
@@ -34,7 +31,7 @@ void box_print(const char message[], const char title[]) {
             breakIndex--;
         }
         breaks[n] = breakIndex;
-        printf("%d\n", breakIndex);
+        // printf("%d\n", breakIndex);
         breakIndex += BOX_WIDTH;
     }
 
@@ -47,44 +44,46 @@ void box_print(const char message[], const char title[]) {
         // For the left side, middle and right side of the box.
         for (int j = 0; j < 3; j++) {
             switch (j) {
-                case 0: // Print left side of the box.
-                    set_win_color(wc_gray);
-                    printf("%c", 186);
-                    for (int k = 0; k < BOX_PADDING; k++) {
+            case 0: // Print left side of the box.
+                set_win_color(wc_gray);
+                printf("%c", 186);
+                for (int k = 0; k < BOX_PADDING; k++) {
+                    printf(" ");
+                }
+                break;
+            case 1: // Print line of text.
+                set_win_color(wc_bright_white);
+                int n = 0;
+                while (n < BOX_WIDTH) {
+                    if (BOX_WIDTH * i + n - m < messageLength) {
+                        if (n <= breaks[i]) {
+                            printf("%c", message[BOX_WIDTH * i + n - m]);
+                        }
+                        else {
+                            printf(" ");
+                            m++;
+                        }
+                    }
+                    else {
                         printf(" ");
                     }
-                    break;
-                case 1: // Print line of text.
-                    set_win_color(wc_bright_white);
-                    int n = 0;
-                    while (n < BOX_WIDTH) {
-                        if (BOX_WIDTH * i + n - m < messageLength) {
-                            if (n <= breaks[i]) {
-                                printf("%c", message[BOX_WIDTH * i + n - m]);
-                            } else {
-                                printf("^");
-                                m++;
-                            }
-                        } else {
-                            printf("_");
-                        }
 
-                        if (BOX_WIDTH * i + n - m >= messageLength) {
-                            i = boxHeight - 1;
-                        }
-                        n++;
+                    if (BOX_WIDTH * i + n - m >= messageLength) {
+                        i = boxHeight - 1;
                     }
-                    break;
-                case 2: // Print right side of the box.
-                    set_win_color(wc_gray);
-                    for (int k = 0; k < BOX_PADDING; k++) {
-                        printf(" ");
-                    }
-                    printf("%c\n", 186);
-                    break;
-                default:
-                    printf("Error\n");
-                    exit(EXIT_FAILURE);
+                    n++;
+                }
+                break;
+            case 2: // Print right side of the box.
+                set_win_color(wc_gray);
+                for (int k = 0; k < BOX_PADDING; k++) {
+                    printf(" ");
+                }
+                printf("%c\n", 186);
+                break;
+            default:
+                printf("Error\n");
+                exit(EXIT_FAILURE);
             }
 
             /*
@@ -119,7 +118,8 @@ void box_print(const char message[], const char title[]) {
     print_bottom_of_box(BOX_WIDTH + 2 * BOX_PADDING);
 }
 
-char *box_read(const char title[]) {
+char* box_read(const char title[], const route_s* routes, const int routeQuantity, const searchInColumn_e searchColumn,
+               const char* firstColumn) {
     // Print the top of the box.
     print_top_of_box(title);
 
@@ -142,12 +142,14 @@ char *box_read(const char title[]) {
     GetConsoleMode(hstdin, &mode);
     SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
 
-    char *input = malloc(BOX_WIDTH + 1);
+    char* input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
-    read_characters(input);
+    read_characters(input, routes, routeQuantity, searchColumn, firstColumn);
 
     printf("\033[2E");
     set_win_color(wc_gray);
+
+    check_input(input);
     return input;
 }
 
@@ -169,7 +171,7 @@ void get_priorities(int priorities[3]) {
     while (p < 49 || p > 51) {
         p = getchar();
     }
-    priorities[0] = (int) p - '0';
+    priorities[0] = (int)p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -177,10 +179,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[9C");
 
     // Get priority for second box.
-    while (p < 49 || p > 51 || (int) p == priorities[0]) {
+    while (p < 49 || p > 51 || (int)p == priorities[0]) {
         p = getchar();
     }
-    priorities[1] = (int) p - '0';
+    priorities[1] = (int)p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -188,10 +190,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[10C");
 
     // Get priority for third box.
-    while (p < 49 || p > 51 || (int) p == priorities[0] || (int) p == priorities[1]) {
+    while (p < 49 || p > 51 || (int)p == priorities[0] || (int)p == priorities[1]) {
         p = getchar();
     }
-    priorities[2] = (int) p - '0';
+    priorities[2] = (int)p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -201,11 +203,13 @@ void get_priorities(int priorities[3]) {
     set_win_color(wc_gray);
 }
 
-void read_characters(char *input) {
-    // TODO: Fix warning?
-
+void read_characters(char* input, const route_s* routes, const int routeQuantity, const searchInColumn_e searchColumn,
+                     const char* firstColumn) {
     int i = 0;
     char c;
+    char** strings = NULL;
+    int stringsAmount = 0;
+
     while (1) {
         scanf(" %c", &c);
         if (i > 0) {
@@ -213,7 +217,8 @@ void read_characters(char *input) {
                 printf("\033[1D \033[1D");
                 input[i] = '\0';
                 i--;
-            } else if (c == 46) {
+            }
+            else if (c == 46) {
                 break;
             }
         }
@@ -221,7 +226,33 @@ void read_characters(char *input) {
         if (i < BOX_WIDTH && isalpha(c)) {
             printf("%c", c);
             input[i] = c;
+            input[i + 1] = '\0';
             i++;
+        }
+
+        if (searchColumn != sic_none) {
+            set_win_color(wc_gray);
+
+            free_string_list(strings, stringsAmount, 1);
+            strings = NULL;
+            stringsAmount = 0;
+
+            if (searchColumn == sic_second) {
+                search_second_column(firstColumn, input, &strings, &stringsAmount, routes, routeQuantity);
+            }
+            else {
+                search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
+            }
+
+            int stringLength = strlen(strings[0]);
+            if (stringsAmount > 0 && stringLength > i) {
+                printf("%s ", strings[0] + i);
+                for (int j = 0; j < stringLength - i + 1; ++j) {
+                    printf("\033[1D");
+                }
+            }
+
+            set_win_color(wc_white);
         }
     }
     input[i] = '\0';
@@ -302,7 +333,8 @@ int length_of_longest_word(const char message[]) {
                 lengthOfLongestWord = n;
             }
             n = 0;
-        } else {
+        }
+        else {
             n++;
         }
     }
