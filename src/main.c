@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
 #include "main.h"
 #include "dataHandling.h"
@@ -9,23 +8,26 @@
 #include "journey.h"
 
 int main(void) {
-    route_s *routes = NULL;
+    route_s* routes = NULL;
     int routeQuantity = 0;
-    preference_e environmentPreference;
+
+    // Load routes from files
+    get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
+    get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
+    qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
+    print_routes(routes, routeQuantity);
 
     // Print journey instructions.
     box_print(journeyInstructions, "Journey");
 
     // Get start location.
-    char *inputStart = box_read("Start");
-    check_input(inputStart);
+    char* inputStart = box_read("Start", routes, routeQuantity, sic_first, "");
 
     // Get destination.
-    char *inputDestination = box_read("Destination");
-    check_input(inputDestination);
+    char* inputDestination = box_read("Destination", routes, routeQuantity, sic_second, inputStart);
 
-    get_train_routes(inputStart, inputDestination, &routes, &routeQuantity);
-    get_plane_routes(inputStart, inputDestination, &routes, &routeQuantity);
+    // Remove routes that does not match location and destination
+    remove_mismatches(inputStart, inputDestination, &routes, &routeQuantity);
 
     // Free allocated memory.
     free(inputStart);
@@ -35,20 +37,12 @@ int main(void) {
     box_print(prioritisationInstructions, "Prioritisation");
 
     // Get user priorities.
-    char price = '\0';
-    char time = '\0';
-    char emission = '\0';
-    get_priorities(&price, &time, &emission);
+    int priorities[] = {0, 0, 0};
+    get_priorities(priorities);
 
-    // int priorities[] = {1, 2, 3};
-
-    // sort_trips(trips, num_trips, priorities);
-
-    // get_journey(&startLocation, &endLocation);
-
-    // get_result();
-
-    // print_table();
+    sort_trips(routes, routeQuantity, priorities);
+    
+    print_routes(routes, routeQuantity);
 
     printf("Press any key to exit...");
     char exit = '\0';

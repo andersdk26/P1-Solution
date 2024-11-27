@@ -1,11 +1,34 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
+#include "dataHandling.h"
+
+#define BOX_WIDTH 32
+#define BOX_PADDING 2
+
+typedef enum {
+    sic_none,
+    sic_first,
+    sic_second
+} searchInColumn_e;
+
 enum inputType {STRING, NUMBER};
 
 void box_print(const char message[], const char title[]);
 
-char *box_read(const char title[]);
+char *box_read(const char title[], const route_s *routes, int routeQuantity, searchInColumn_e searchColumn,
+    const char *firstColumn);
+
+void get_priorities(int priorities[3]);
+
+void read_characters(char *input, const route_s *routes, int routeQuantity, searchInColumn_e searchColumn,
+    const char *firstColumn);
+
+void print_top_of_priority_boxes(const char titles[3][10]);
+
+void print_middle_of_priority_boxes(const char titles[3][10]);
+
+void print_bottom_of_priority_boxes(const char titles[3][10]);
 
 void get_priorities(char *price, char *time, char *emission);
 
