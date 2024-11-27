@@ -244,7 +244,12 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
-            int stringLength = strlen(strings[0]);
+            if (stringsAmount < 1) {
+                set_win_color(wc_white);
+                continue;
+            }
+
+            int stringLength = (int)strlen(strings[0]);
             if (stringsAmount > 0 && stringLength > i) {
                 printf("%s ", strings[0] + i);
                 for (int j = 0; j < stringLength - i + 1; ++j) {
