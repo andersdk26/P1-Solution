@@ -90,6 +90,12 @@ void append_route(route_s** routeList, int* routeListLength, const char* originS
     strcpy(object->destinationName, destinationNameStr);
 }
 
+/**
+ * Removes route from list
+ * @param routeList List to remove in
+ * @param routeListLength Length of list
+ * @param index Index to remove
+ */
 void remove_route(route_s** routeList, int* routeListLength, const int index) {
     free((*routeList)[index].origin);
     free((*routeList)[index].destination);
@@ -209,9 +215,17 @@ void search_second_column(const char* origin, const char* query, char*** stringL
     }
 }
 
+/**
+ * Removes all routes not matching origin and destination
+ * @param origin Origin string
+ * @param destination Destination string
+ * @param routes Routes to search in
+ * @param routeAmount Amount of routes
+ */
 void remove_mismatches(const char* origin, const char* destination, route_s** routes, int* routeAmount) {
     for (int i = 0; i < *routeAmount;) {
         if (strcmp((*routes)[i].origin, origin) == 0 && strcmp((*routes)[i].destination, destination) == 0) {
+            // Route matches origin and destination
             i++;
             continue;
         }
@@ -270,14 +284,6 @@ int alphabetic_route_compare(const void* vp1, const void* vp2) {
     return strcmp(route1->destination, route2->destination);
 }
 
-typedef struct Journey {
-    char start[50];
-    char destination[50];
-    float price;
-    int duration;
-    int environmental_impact;
-} Trip;
-
 int compare_trips(void* param, const void* a, const void* b) {
     const route_s* trip_a = (const route_s*)a;
     const route_s* trip_b = (const route_s*)b;
@@ -303,7 +309,6 @@ int compare_trips(void* param, const void* a, const void* b) {
     }
     return 0;
 }
-
 
 void sort_trips(route_s* trips, const size_t num_trips, void* priorities) {
     qsort_s(trips, num_trips, sizeof(route_s), compare_trips, (void*)priorities);
