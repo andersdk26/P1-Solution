@@ -5,3 +5,5 @@ add_library(journey journey.c)
 
 add_executable(P1_Solution main.c main.h journey.c journey.h)
 target_link_libraries(P1_Solution dataHandling general_ terminal journey)
+
+#configure_file(airplanes.csv airplanes.csv COPYONLY)
