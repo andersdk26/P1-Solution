@@ -76,6 +76,11 @@ void check_input(const char* input) {
  * @return Memory pointer
  */
 void* memory_allocation(void* p, const size_t size, const int clear) {
+    if (size < 1) {
+        free(p);
+        return NULL;
+    }
+
     void* lastP = NULL;
     if (p == NULL) {
         if (clear) {
@@ -91,8 +96,8 @@ void* memory_allocation(void* p, const size_t size, const int clear) {
     }
 
     if (p == NULL) {
-        free(lastP);
         perror("Memory allocation error");
+        free(lastP);
         exit(EXIT_FAILURE);
     }
 

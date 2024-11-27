@@ -223,10 +223,9 @@ void search_second_column(const char* origin, const char* query, char*** stringL
  * @param routeAmount Amount of routes
  */
 void remove_mismatches(const char* origin, const char* destination, route_s** routes, int* routeAmount) {
-    for (int i = 0; i < *routeAmount;) {
+    for (int i = *routeAmount - 1; i >= 0; i--) {
         if (strcmp((*routes)[i].origin, origin) == 0 && strcmp((*routes)[i].destination, destination) == 0) {
             // Route matches origin and destination
-            i++;
             continue;
         }
         remove_route(routes, routeAmount, i);

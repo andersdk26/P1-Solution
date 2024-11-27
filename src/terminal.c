@@ -245,7 +245,7 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
             }
 
             if (stringsAmount < 1) {
-                set_win_color(wc_white);
+                set_win_color(wc_bright_white);
                 continue;
             }
 
@@ -257,7 +257,7 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
                 }
             }
 
-            set_win_color(wc_white);
+            set_win_color(wc_bright_white);
         }
     }
     input[i] = '\0';
