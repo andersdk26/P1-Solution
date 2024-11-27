@@ -203,6 +203,7 @@ void get_priorities(int priorities[3]) {
 
 void read_characters(char *input) {
     // TODO: Fix warning?
+
     int i = 0;
     char c;
     while (1) {
