@@ -12,5 +12,4 @@
 //
 // void get_result(void);
 
-
 #endif //JOURNEY_H
