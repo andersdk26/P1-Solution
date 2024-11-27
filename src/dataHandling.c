@@ -22,8 +22,8 @@ void print_routes(const route_s *list, const int length) {
  * @param mode R/W mode
  * @return File object
  */
-FILE* open_file(const char *fileName, const char *mode) {
-    FILE* file = fopen(fileName, mode);
+FILE *open_file(const char *fileName, const char *mode) {
+    FILE *file = fopen(fileName, mode);
     if (file == NULL) {
         perror("Error opening file");
         return NULL;
@@ -39,7 +39,7 @@ FILE* open_file(const char *fileName, const char *mode) {
 int get_file_lines(FILE *file) {
     int count = 0;
     char c;
-    while ((c = (char)fgetc(file)) != EOF) {
+    while ((c = (char) fgetc(file)) != EOF) {
         if (c == '\n') {
             count++;
         }
@@ -64,10 +64,9 @@ int get_file_lines(FILE *file) {
 void append_route(route_s **routeList, int *routeListLength, const char *originStr, const char *destinationStr,
                   const char *originNameStr, const char *destinationNameStr, const int travelTime, const int emission,
                   const int price, const int downtime, const transportType_e transportType) {
-
     // Extend route array by 1 object
     (*routeListLength)++;
-    *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s),0);
+    *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s), 0);
 
     // Calculates pointer to last (new) object in list
     route_s *object = (*routeList) + *routeListLength - 1;
@@ -80,14 +79,14 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
     object->transportType = transportType;
 
     // Dynamic allocate strings and insert them as pointers
-    object->origin = memory_allocation(NULL,strlen(originStr)+1,0);
+    object->origin = memory_allocation(NULL, strlen(originStr) + 1, 0);
     strcpy(object->origin, originStr);
-    object->destination = memory_allocation(NULL,strlen(destinationStr)+1,0);
+    object->destination = memory_allocation(NULL, strlen(destinationStr) + 1, 0);
     strcpy(object->destination, destinationStr);
 
-    object->originName = memory_allocation(NULL,strlen(originNameStr)+1,0);
+    object->originName = memory_allocation(NULL, strlen(originNameStr) + 1, 0);
     strcpy(object->originName, originNameStr);
-    object->destinationName = memory_allocation(NULL,strlen(destinationNameStr)+1,0);
+    object->destinationName = memory_allocation(NULL, strlen(destinationNameStr) + 1, 0);
     strcpy(object->destinationName, destinationNameStr);
 }
 
@@ -98,11 +97,11 @@ void remove_route(route_s **routeList, int *routeListLength, const int index) {
     free((*routeList)[index].destinationName);
 
     for (int i = index; i < *routeListLength - 1; ++i) {
-        (*routeList)[i] = (*routeList)[i+1];
+        (*routeList)[i] = (*routeList)[i + 1];
     }
 
     (*routeListLength)--;
-    *routeList= memory_allocation(*routeList, *routeListLength * sizeof(route_s),0);
+    *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s), 0);
 }
 
 // todo: error handling
@@ -115,28 +114,28 @@ void remove_route(route_s **routeList, int *routeListLength, const int index) {
  * @param routeAmount Pointer to route list length
  */
 void get_all_routes(const char *fileName, const transportType_e transportType, route_s **routes, int *routeAmount) {
-    FILE* file = open_file(fileName, "r");
+    FILE *file = open_file(fileName, "r");
 
     // Temporary strings
     const int lineLength = 200;
     char line[lineLength];
     char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
-        travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
+            travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
 
     fgets(line, lineLength, file); // Read first irrelevant row
     while (fgets(line, lineLength, file) != NULL) {
         sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,]",
-            originStr, destinationStr, originNameStr, destinationNameStr,
-            travelTimeStr, emissionStr, priceStr, downtimeStr);
+               originStr, destinationStr, originNameStr, destinationNameStr,
+               travelTimeStr, emissionStr, priceStr, downtimeStr);
 
         // parse parameter values and append them to routes
         append_route(routes, routeAmount,
-            originStr, destinationStr, originNameStr, destinationNameStr,
-            strtol(travelTimeStr,NULL,10),
-            (int)round(strtod(emissionStr,NULL)),       // Convert decimal to integer
-            (int)(strtod(emissionStr,NULL) * 100),      // Convert price to 1/100
-            strtol(downtimeStr,NULL,10),
-            transportType);
+                     originStr, destinationStr, originNameStr, destinationNameStr,
+                     strtol(travelTimeStr,NULL, 10),
+                     (int) round(strtod(emissionStr,NULL)), // Convert decimal to integer
+                     (int) (strtod(emissionStr,NULL) * 100), // Convert price to 1/100
+                     strtol(downtimeStr,NULL, 10),
+                     transportType);
     }
 
     fclose(file);
@@ -150,9 +149,9 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
  */
 void append_string(const char *str, char ***stringList, int *stringListLength) {
     (*stringListLength)++;
-    *stringList = memory_allocation(*stringList, *stringListLength * sizeof(char*),0);
+    *stringList = memory_allocation(*stringList, *stringListLength * sizeof(char *), 0);
 
-    (*stringList)[*stringListLength - 1] = memory_allocation(NULL,strlen(str) + 1,0);
+    (*stringList)[*stringListLength - 1] = memory_allocation(NULL, strlen(str) + 1, 0);
 
     strcpy((*stringList)[*stringListLength - 1], str);
 }
@@ -169,14 +168,14 @@ void search_first_column(const char *query, char ***stringList, int *stringListL
                          const route_s *routes, const int routeAmount) {
     char query2[50];
     strcpy(query2, query);
-    strcat(query2,"~");
+    strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
-        if (i > 0 && strcmp(routes[i-1].origin, routes[i].origin) == 0) {
+        if (i > 0 && strcmp(routes[i - 1].origin, routes[i].origin) == 0) {
             continue;
         }
-        if (strcmp(query,routes[i].origin) <= 0 && strcmp(query2,routes[i].origin) > 0) {
-            append_string(routes[i].origin,stringList,stringListLength);
+        if (strcmp(query, routes[i].origin) <= 0 && strcmp(query2, routes[i].origin) > 0) {
+            append_string(routes[i].origin, stringList, stringListLength);
         }
     }
 }
@@ -192,27 +191,27 @@ void search_first_column(const char *query, char ***stringList, int *stringListL
  * @param routeAmount Length of array
  */
 void search_second_column(const char *origin, const char *query, char ***stringList, int *stringListLength,
-                         const route_s *routes, const int routeAmount) {
+                          const route_s *routes, const int routeAmount) {
     char query2[50];
     strcpy(query2, query);
-    strcat(query2,"~");
+    strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
         if (strcmp(origin, routes[i].origin) != 0) {
             continue;
         }
-        if (i > 0 && strcmp(routes[i-1].destination, routes[i].destination) == 0) {
+        if (i > 0 && strcmp(routes[i - 1].destination, routes[i].destination) == 0) {
             continue;
         }
-        if (strcmp(query,routes[i].destination) <= 0 && strcmp(query2,routes[i].destination) > 0) {
-            append_string(routes[i].destination,stringList,stringListLength);
+        if (strcmp(query, routes[i].destination) <= 0 && strcmp(query2, routes[i].destination) > 0) {
+            append_string(routes[i].destination, stringList, stringListLength);
         }
     }
 }
 
 void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
     for (int i = 0; i < *routeAmount;) {
-        if (strcmp((*routes)[i].origin,origin) == 0 && strcmp((*routes)[i].destination,destination) == 0) {
+        if (strcmp((*routes)[i].origin, origin) == 0 && strcmp((*routes)[i].destination, destination) == 0) {
             i++;
             continue;
         }
@@ -260,8 +259,8 @@ void free_route_list(route_s *routeList, const int routeListLength, const int dy
  * @return 1: E1 > E2, -1: E1 > E2, 0: E1 == E2
  */
 int alphabetic_route_compare(const void *vp1, const void *vp2) {
-    const route_s *route1 = (route_s *)vp1;
-    const route_s *route2 = (route_s *)vp2;
+    const route_s *route1 = (route_s *) vp1;
+    const route_s *route2 = (route_s *) vp2;
 
     const int result = strcmp(route1->origin, route2->origin);
     if (result != 0) {
@@ -269,7 +268,6 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
     }
 
     return strcmp(route1->destination, route2->destination);
-
 }
 
 typedef struct Journey {
@@ -281,24 +279,24 @@ typedef struct Journey {
 } Trip;
 
 int compare_trips(const void *a, const void *b, void *param) {
-    const Trip *trip_a = (const Trip *)a;
-    const Trip *trip_b = (const Trip *)b;
-    int *priorities = (int *)param;
+    const Trip *trip_a = (const Trip *) a;
+    const Trip *trip_b = (const Trip *) b;
+    int *priorities = (int *) param;
 
     for (int i = 0; i < 3; ++i) {
         switch (priorities[i]) {
             case 1:
                 if (trip_a->price < trip_b->price) return -1;
-            if (trip_a->price > trip_b->price) return 1;
-            break;
+                if (trip_a->price > trip_b->price) return 1;
+                break;
             case 2:
                 if (trip_a->duration < trip_b->duration) return -1;
-            if (trip_a->duration > trip_b->duration) return 1;
-            break;
+                if (trip_a->duration > trip_b->duration) return 1;
+                break;
             case 3:
                 if (trip_a->environmental_impact > trip_b->environmental_impact) return -1;
-            if (trip_a->environmental_impact < trip_b->environmental_impact) return 1;
-            break;
+                if (trip_a->environmental_impact < trip_b->environmental_impact) return 1;
+                break;
         }
     }
     return 0;
@@ -308,4 +306,3 @@ int compare_trips(const void *a, const void *b, void *param) {
 void sort_trips(Trip *trips, size_t num_trips, int *priorities) {
     qsort_s(trips, num_trips, sizeof(Trip), compare_trips, priorities);
 }
-
