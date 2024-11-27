@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
 #include "main.h"
 #include "dataHandling.h"
@@ -13,6 +12,9 @@ int main(void) {
     int routeQuantity = 0;
     preference_e environmentPreference;
 
+    char **str = NULL;
+    int strLength = 0;
+
     // Print journey instructions.
     box_print(journeyInstructions, "Journey");
 
@@ -24,8 +26,31 @@ int main(void) {
     char *inputDestination = box_read("Destination");
     check_input(inputDestination);
 
-    get_train_routes(inputStart, inputDestination, &routes, &routeQuantity);
-    get_plane_routes(inputStart, inputDestination, &routes, &routeQuantity);
+    get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
+    get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
+    qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
+
+    // // test search
+    // search_first_column("",&str,&strLength,routes,routeQuantity);
+    // printf("%d strings:\n", strLength);
+    // for (int i = 0; i < strLength; ++i) {
+    //     printf("%s\n", str[i]);
+    // }
+    //
+    // free_string_list(str,strLength,1);
+    // str = NULL;
+    // strLength = 0;
+    //
+    // search_second_column("Frankfurt","",&str,&strLength,routes,routeQuantity);
+    // printf("%d strings:\n", strLength);
+    // for (int i = 0; i < strLength; ++i) {
+    //     printf("%s\n", str[i]);
+    // }
+
+    // remove_mismatches("Frankfurt", "Hamburg", &routes, &routeQuantity);
+    // print_routes(routes, routeQuantity);
+
+    //print_routes(routes, routeQuantity);
 
     // Free allocated memory.
     free(inputStart);
