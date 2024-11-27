@@ -41,12 +41,7 @@ int main(void) {
     get_priorities(priorities);
 
     sort_trips(routes, routeQuantity, priorities);
-
-    // get_journey(&startLocation, &endLocation);
-
-    // get_result();
-
-    // print_table();
+    
     print_routes(routes, routeQuantity);
 
     printf("Press any key to exit...");
