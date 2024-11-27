@@ -33,8 +33,6 @@ void box_print(const char message[], const char title[]) {
         while (message[breakIndex] != ' ') {
             breakIndex--;
         }
-
-
         breaks[n] = breakIndex;
         printf("%d\n", breakIndex);
         breakIndex += BOX_WIDTH;
@@ -153,45 +151,51 @@ char *box_read(const char title[]) {
     return input;
 }
 
-void get_priorities(char *price, char *time, char *emission) {
+void get_priorities(int priorities[3]) {
     const char titles[3][10] = {{"Time"}, {"Price"}, {"Emission"}};
 
+    // Print input boxes in terminal.
     print_top_of_priority_boxes(titles);
     print_middle_of_priority_boxes(titles);
     print_bottom_of_priority_boxes(titles);
 
+    // Set cursor inside the first box.
     printf("\033[2A");
     printf("\033[3C");
     set_win_color(wc_bright_white);
 
-    char c = '\0';
-    while (c < 49 || c > 51) {
-        scanf(" %c", &c);
+    // Get priority for first box.
+    char p = '\0';
+    while (p < 49 || p > 51) {
+        p = getchar();
     }
+    priorities[0] = (int) p - '0';
+    printf("%c", p);
+    p = '\0';
 
-    *price = c;
-    printf("%c", c);
-    c = '\0';
-
+    // Move cursor to the second box.
     printf("\033[9C");
 
-    while (c < 49 || c > 51 || c == *price) {
-        scanf(" %c", &c);
+    // Get priority for second box.
+    while (p < 49 || p > 51 || (int) p == priorities[0]) {
+        p = getchar();
     }
+    priorities[1] = (int) p - '0';
+    printf("%c", p);
+    p = '\0';
 
-    *time = c;
-    printf("%c", c);
-    c = '\0';
-
+    // Move cursor to the third box.
     printf("\033[10C");
 
-    while (c < 49 || c > 51 || c == *price || c == *time) {
-        scanf(" %c", &c);
+    // Get priority for third box.
+    while (p < 49 || p > 51 || (int) p == priorities[0] || (int) p == priorities[1]) {
+        p = getchar();
     }
+    priorities[2] = (int) p - '0';
+    printf("%c", p);
+    p = '\0';
 
-    *emission = c;
-    printf("%c", c);
-
+    // Move cursor out of the box and change text color.
     printf("\033[2B");
     printf("\033[0G");
     set_win_color(wc_gray);

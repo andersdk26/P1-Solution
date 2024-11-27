@@ -35,10 +35,8 @@ int main(void) {
     box_print(prioritisationInstructions, "Prioritisation");
 
     // Get user priorities.
-    char price = '\0';
-    char time = '\0';
-    char emission = '\0';
-    get_priorities(&price, &time, &emission);
+    int priorities[] = {0, 0, 0};
+    get_priorities(priorities);
 
     // int priorities[] = {1, 2, 3};
 
