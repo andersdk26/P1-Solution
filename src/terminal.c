@@ -63,7 +63,6 @@ void box_print(char message[], const char title[]) {
                     break;
                 }
                 printf("%c", message[n]);
-                delay(5);
                 n++;
             }
         }
@@ -133,13 +132,13 @@ void print_journey(const route_s journey) {
                 printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
                 break;
             case 1:
-                printf("Time:\t%d minutes", journey.travelTime);
+                printf("Estimated travel time:\t%d minutes", journey.travelTime + journey.downtime);
                 break;
             case 2:
                 printf("Price:\t%.2lf EUR", journey.price / 100.0);
                 break;
             case 3:
-                printf("Emission:\t%d CO2e", journey.emission);
+                printf("Emission:\t%d kg CO2e per passenger.", journey.emission);
                 break;
             default:
                 printf("Unknown 'print_journey' case!");
