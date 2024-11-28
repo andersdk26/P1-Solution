@@ -9,7 +9,7 @@
 HANDLE hstdin;
 DWORD mode;
 
-void box_print(const char message[], const char title[]) {
+void box_print(char message[], const char title[]) {
     // TODO: Fix wrap selvom der er plads til ordet.
     // TODO: Fix at sidste ord bliver sat på en ny linje.
 
@@ -24,102 +24,60 @@ void box_print(const char message[], const char title[]) {
 
     const int boxHeight = number_of_words(message);
 
-    int breaks[boxHeight - 1];
+    //int breaks[boxHeight - 1];
+    int previousBreakIndex = 0;
     int breakIndex = BOX_WIDTH - 1;
-    for (int n = 0; n < boxHeight; n++) {
+    for (int n = 0; n < boxHeight - 1; n++) {
         while (message[breakIndex] != ' ') {
             breakIndex--;
         }
-        breaks[n] = breakIndex;
+        if (breakIndex < previousBreakIndex || breakIndex > messageLength) {
+            break;
+        }
+        message[breakIndex] = '#';
+        previousBreakIndex = breakIndex;
         // printf("%d\n", breakIndex);
-        breakIndex += BOX_WIDTH;
+        breakIndex += BOX_WIDTH + 1;
     }
 
     // Top side of text box.
     print_top_of_box(title);
 
-    int m = 0;
-    // For every line of text in the box.
-    for (int i = 0; i < boxHeight; i++) {
-        // For the left side, middle and right side of the box.
-        for (int j = 0; j < 3; j++) {
-            switch (j) {
-            case 0: // Print left side of the box.
-                set_win_color(wc_gray);
-                printf("%c", 186);
-                for (int k = 0; k < BOX_PADDING; k++) {
-                    printf(" ");
-                }
-                break;
-            case 1: // Print line of text.
-                set_win_color(wc_bright_white);
-                int n = 0;
-                while (n < BOX_WIDTH) {
-                    if (BOX_WIDTH * i + n - m < messageLength) {
-                        if (n <= breaks[i]) {
-                            printf("%c", message[BOX_WIDTH * i + n - m]);
-                        }
-                        else {
-                            printf(" ");
-                            m++;
-                        }
-                    }
-                    else {
-                        printf(" ");
-                    }
+    int n = 0;
+    while (n < messageLength) {
+        print_left_side_of_box();
+        for (int i = 0; i < BOX_WIDTH; i++) {
+            printf(" ");
+        }
+        print_right_side_of_box();
 
-                    if (BOX_WIDTH * i + n - m >= messageLength) {
-                        i = boxHeight - 1;
-                    }
-                    n++;
-                }
-                break;
-            case 2: // Print right side of the box.
-                set_win_color(wc_gray);
-                for (int k = 0; k < BOX_PADDING; k++) {
-                    printf(" ");
-                }
-                printf("%c\n", 186);
-                break;
-            default:
-                printf("Error\n");
-                exit(EXIT_FAILURE);
-            }
+        set_win_color(wc_bright_white);
+        printf("\033[1A" "\033[0G" "\033[%dC", 1 + BOX_PADDING);
 
-            /*
-            // Otherwise, print characters from message.
-            set_win_color(wc_bright_white);
+        for (int i = 0; i < BOX_WIDTH; i++) {
             if (n < messageLength) {
-                if (n <= breaks[i]) {
-                    printf("%d", n);
-                    if (n % BOX_WIDTH == 0 && message[n] == ' ') {
-                    } else {
-                        printf("%c", message[n]);
+                if (message[n] == '#') {
+                    if (i == 0) {
+                        printf("\033[1A");
                     }
                     n++;
-                } else {
-                    printf("^");
-                    //n = breaks[i] + 1;
+                    break;
                 }
-            } else {
-                // If end of message has been reached, then print empty spaces.
-                printf("_");
+                printf("%c", message[n]);
+                delay(15);
+                n++;
             }
-            */
         }
 
-        // If end of message has been reached, break out of the for-loop.
-        //if (n == messageLength) {
-        //    break;
-        //}
+        printf("\033[1B" "\033[0G");
     }
 
     // Bottom side of text box.
     print_bottom_of_box(BOX_WIDTH + 2 * BOX_PADDING);
 }
 
-char* box_read(const char title[], const route_s* routes, const int routeQuantity, const searchInColumn_e searchColumn,
-               const char* firstColumn) {
+char *box_read(const char title[], const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
+               const char *firstColumn) {
     // Print the top of the box.
     print_top_of_box(title);
 
@@ -142,7 +100,7 @@ char* box_read(const char title[], const route_s* routes, const int routeQuantit
     GetConsoleMode(hstdin, &mode);
     SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
 
-    char* input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
+    char *input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
     read_characters(input, routes, routeQuantity, searchColumn, firstColumn);
 
@@ -151,6 +109,45 @@ char* box_read(const char title[], const route_s* routes, const int routeQuantit
 
     check_input(input);
     return input;
+}
+
+void print_journey(const route_s journey) {
+    print_top_of_box("Best journey");
+
+    for (int i = 0; i < 4; i++) {
+        print_left_side_of_box();
+        for (int j = 0; j < BOX_WIDTH; j++) {
+            printf(" ");
+        }
+        print_right_side_of_box();
+    }
+
+    set_win_color(wc_bright_white);
+
+    printf("\033[4A");
+
+    printf("\033[0G");
+    printf("\033[%dC", 1 + BOX_PADDING);
+    printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
+    printf("\033[1B");
+
+    printf("\033[0G");
+    printf("\033[%dC", 1 + BOX_PADDING);
+    printf("Time:\t%d minutes", journey.travelTime);
+    printf("\033[1B");
+
+    printf("\033[0G");
+    printf("\033[%dC", 1 + BOX_PADDING);
+    printf("Price:\t%.2lf EUR", journey.price / 100.0);
+    printf("\033[1B");
+
+    printf("\033[0G");
+    printf("\033[%dC", 1 + BOX_PADDING);
+    printf("Emission:\t%d CO2e", journey.emission);
+    printf("\033[1B");
+
+    printf("\033[0G");
+    print_bottom_of_box();
 }
 
 void get_priorities(int priorities[3]) {
@@ -171,7 +168,7 @@ void get_priorities(int priorities[3]) {
     while (p < 49 || p > 51) {
         p = getchar();
     }
-    priorities[0] = (int)p - '0';
+    priorities[0] = (int) p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -179,10 +176,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[9C");
 
     // Get priority for second box.
-    while (p < 49 || p > 51 || (int)p == priorities[0]) {
+    while (p < 49 || p > 51 || (int) p - '0' == priorities[0]) {
         p = getchar();
     }
-    priorities[1] = (int)p - '0';
+    priorities[1] = (int) p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -190,10 +187,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[10C");
 
     // Get priority for third box.
-    while (p < 49 || p > 51 || (int)p == priorities[0] || (int)p == priorities[1]) {
+    while (p < 49 || p > 51 || (int) p - '0' == priorities[0] || (int) p - '0' == priorities[1]) {
         p = getchar();
     }
-    priorities[2] = (int)p - '0';
+    priorities[2] = (int) p - '0';
     printf("%c", p);
     p = '\0';
 
@@ -203,11 +200,11 @@ void get_priorities(int priorities[3]) {
     set_win_color(wc_gray);
 }
 
-void read_characters(char* input, const route_s* routes, const int routeQuantity, const searchInColumn_e searchColumn,
-                     const char* firstColumn) {
+void read_characters(char *input, const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
+                     const char *firstColumn) {
     int i = 0;
     char c;
-    char** strings = NULL;
+    char **strings = NULL;
     int stringsAmount = 0;
 
     while (1) {
@@ -217,8 +214,7 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
                 printf("\033[1D \033[1D");
                 input[i] = '\0';
                 i--;
-            }
-            else if (c == 46) {
+            } else if (c == 46) {
                 break;
             }
         }
@@ -239,8 +235,7 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
 
             if (searchColumn == sic_second) {
                 search_second_column(firstColumn, input, &strings, &stringsAmount, routes, routeQuantity);
-            }
-            else {
+            } else {
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
@@ -249,7 +244,7 @@ void read_characters(char* input, const route_s* routes, const int routeQuantity
                 continue;
             }
 
-            int stringLength = (int)strlen(strings[0]);
+            int stringLength = (int) strlen(strings[0]);
             if (stringsAmount > 0 && stringLength > i) {
                 printf("%s ", strings[0] + i);
                 for (int j = 0; j < stringLength - i + 1; ++j) {
@@ -321,11 +316,28 @@ void print_top_of_box(const char title[]) {
 }
 
 void print_bottom_of_box() {
+    set_win_color(wc_gray);
     printf("%c", 200);
     for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
         printf("%c", 205);
     }
     printf("%c\n", 188);
+}
+
+void print_left_side_of_box() {
+    set_win_color(wc_gray);
+    printf("%c", 186);
+    for (int k = 0; k < BOX_PADDING; k++) {
+        printf(" ");
+    }
+}
+
+void print_right_side_of_box() {
+    set_win_color(wc_gray);
+    for (int k = 0; k < BOX_PADDING; k++) {
+        printf(" ");
+    }
+    printf("%c\n", 186);
 }
 
 int length_of_longest_word(const char message[]) {
@@ -338,8 +350,7 @@ int length_of_longest_word(const char message[]) {
                 lengthOfLongestWord = n;
             }
             n = 0;
-        }
-        else {
+        } else {
             n++;
         }
     }
