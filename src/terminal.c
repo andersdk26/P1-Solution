@@ -119,9 +119,11 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
 }
 
 void print_journey(const route_s journey) {
-    print_top_of_box("Best journey");
+    char title[BOX_WIDTH];
+    sprintf(title, "Your best journey is by %s", journey.transportType == 1 ? "airplane" : "train");
+    print_top_of_box(title);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         print_left_side_of_box();
         for (int j = 0; j < BOX_WIDTH; j++) {
             printf(" ");
@@ -131,22 +133,25 @@ void print_journey(const route_s journey) {
 
     set_win_color(wc_bright_white);
 
-    printf("\033[4A");
+    printf("\033[5A");
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         printf("\033[0G");
         printf("\033[%dC", 1 + BOX_PADDING);
         switch (i) {
             case 0:
-                printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
+                printf("From %s %s", journey.origin, journey.originName);
                 break;
             case 1:
-                printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                printf("To %s %s", journey.destination, journey.destinationName);
                 break;
             case 2:
-                printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
+                printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
                 break;
             case 3:
+                printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
+                break;
+            case 4:
                 printf("Emission:\t\t%d kg CO2e per passenger.", journey.emission);
                 break;
             default:
@@ -172,6 +177,8 @@ void get_priorities(int priorities[3]) {
     printf("\033[2A");
     printf("\033[3C");
     set_win_color(wc_bright_white);
+
+    // TODO: Fix this.
 
     // Get priority for time.
     char p = '\0';
