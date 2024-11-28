@@ -4,6 +4,12 @@
 #include <stdio.h>
 
 typedef enum {
+    p_time,
+    p_price,
+    p_emission
+} priority_e;
+
+typedef enum {
     tt_none,
     tt_plane,
     tt_train

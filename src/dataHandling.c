@@ -181,10 +181,10 @@ void search_first_column(const char *query, char ***stringList, int *stringListL
     strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
-        if (i > 0 && strcmp(routes[i - 1].origin, routes[i].origin) == 0) {
+        if (i > 0 && stricmp(routes[i - 1].origin, routes[i].origin) == 0) {
             continue;
         }
-        if (strcmp(query, routes[i].origin) <= 0 && strcmp(query2, routes[i].origin) > 0) {
+        if (stricmp(query, routes[i].origin) <= 0 && stricmp(query2, routes[i].origin) > 0) {
             append_string(routes[i].origin, stringList, stringListLength);
         }
     }
@@ -207,13 +207,13 @@ void search_second_column(const char *origin, const char *query, char ***stringL
     strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
-        if (strcmp(origin, routes[i].origin) != 0) {
+        if (stricmp(origin, routes[i].origin) != 0) {
             continue;
         }
-        if (i > 0 && strcmp(routes[i - 1].destination, routes[i].destination) == 0) {
+        if (i > 0 && stricmp(routes[i - 1].destination, routes[i].destination) == 0) {
             continue;
         }
-        if (strcmp(query, routes[i].destination) <= 0 && strcmp(query2, routes[i].destination) > 0) {
+        if (stricmp(query, routes[i].destination) <= 0 && stricmp(query2, routes[i].destination) > 0) {
             append_string(routes[i].destination, stringList, stringListLength);
         }
     }
@@ -228,7 +228,7 @@ void search_second_column(const char *origin, const char *query, char ***stringL
  */
 void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
     for (int i = *routeAmount - 1; i >= 0; i--) {
-        if (strcmp((*routes)[i].origin, origin) == 0 && strcmp((*routes)[i].destination, destination) == 0) {
+        if (stricmp((*routes)[i].origin, origin) == 0 && stricmp((*routes)[i].destination, destination) == 0) {
             // Route matches origin and destination
             continue;
         }
@@ -279,30 +279,30 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
     const route_s *route1 = (route_s *) vp1;
     const route_s *route2 = (route_s *) vp2;
 
-    const int result = strcmp(route1->origin, route2->origin);
+    const int result = stricmp(route1->origin, route2->origin);
     if (result != 0) {
         return result;
     }
 
-    return strcmp(route1->destination, route2->destination);
+    return stricmp(route1->destination, route2->destination);
 }
 
 int compare_trips(void *param, const void *a, const void *b) {
     const route_s *trip_a = (const route_s *) a;
     const route_s *trip_b = (const route_s *) b;
-    int *priorities = (int *) param;
+    const priority_e *priorities = (priority_e *) param;
 
     for (int i = 0; i < 3; ++i) {
         switch (priorities[i]) {
-            case 1:
+            case p_time:
                 if (trip_a->travelTime + trip_a->downtime < trip_b->travelTime + trip_b->downtime) return -1;
                 if (trip_a->travelTime + trip_a->downtime > trip_b->travelTime + trip_b->downtime) return 1;
                 break;
-            case 2:
+            case p_price:
                 if (trip_a->price < trip_b->price) return -1;
                 if (trip_a->price > trip_b->price) return 1;
                 break;
-            case 3:
+            case p_emission:
                 if (trip_a->emission < trip_b->emission) return -1;
                 if (trip_a->emission > trip_b->emission) return 1;
                 break;
