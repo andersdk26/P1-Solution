@@ -14,7 +14,7 @@ typedef enum {
 } searchInColumn_e;
 
 
-void box_print(char message[], const char title[]);
+void box_print(const char originalMessage[], const char title[]);
 
 void print_journey(route_s journey);
 

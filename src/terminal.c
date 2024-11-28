@@ -9,7 +9,13 @@
 HANDLE hstdin;
 DWORD mode;
 
-void box_print(char message[], const char title[]) {
+void box_print(const char originalMessage[], const char title[]) {
+    // Allocate memory for copy of original message.
+    char *message = memory_allocation(NULL, strlen(originalMessage) + 1, 0);
+
+    // Put original message into allocated memory as a string.
+    strcpy(message, originalMessage);
+
     // Get length of message.
     const int messageLength = strlen(message);
 
@@ -72,6 +78,9 @@ void box_print(char message[], const char title[]) {
 
     // Bottom side of text box.
     print_bottom_of_box(BOX_WIDTH + 2 * BOX_PADDING);
+
+    // Free allocated memory.
+    free(message);
 }
 
 char *box_read(const char title[], const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
@@ -132,13 +141,13 @@ void print_journey(const route_s journey) {
                 printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
                 break;
             case 1:
-                printf("Estimated travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
                 break;
             case 2:
-                printf("Price:\t%.2lf EUR", journey.price / 100.0);
+                printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
                 break;
             case 3:
-                printf("Emission:\t%d kg CO2e per passenger.", journey.emission);
+                printf("Emission:\t\t%d kg CO2e per passenger.", journey.emission);
                 break;
             default:
                 printf("Unknown 'print_journey' case!");
@@ -164,34 +173,34 @@ void get_priorities(int priorities[3]) {
     printf("\033[3C");
     set_win_color(wc_bright_white);
 
-    // Get priority for first box.
+    // Get priority for time.
     char p = '\0';
     while (p < 49 || p > 51) {
         p = getchar();
     }
-    priorities[0] = (int) p - '0';
+    priorities[(int) p - '1'] = 1;
     printf("%c", p);
     p = '\0';
 
     // Move cursor to the second box.
     printf("\033[9C");
 
-    // Get priority for second box.
+    // Get priority for price.
     while (p < 49 || p > 51 || (int) p - '0' == priorities[0]) {
         p = getchar();
     }
-    priorities[1] = (int) p - '0';
+    priorities[(int) p - '1'] = 2;
     printf("%c", p);
     p = '\0';
 
     // Move cursor to the third box.
     printf("\033[10C");
 
-    // Get priority for third box.
+    // Get priority for emission.
     while (p < 49 || p > 51 || (int) p - '0' == priorities[0] || (int) p - '0' == priorities[1]) {
         p = getchar();
     }
-    priorities[2] = (int) p - '0';
+    priorities[(int) p - '1'] = 3;
     printf("%c", p);
     p = '\0';
 
