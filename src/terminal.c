@@ -102,10 +102,10 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     printf("\033[2A");
     printf("\033[%dC", 1 + BOX_PADDING);
 
-    hstdin = GetStdHandle(STD_INPUT_HANDLE);
-
-    GetConsoleMode(hstdin, &mode);
-    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT));
+    // hstdin = GetStdHandle(STD_INPUT_HANDLE);
+    //
+    // GetConsoleMode(hstdin, &mode);
+    // SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT));
 
     char *input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
@@ -219,19 +219,25 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     char *autoCompleteString = NULL;
     unsigned int autoCompleteSelection = 0;
 
+    // Prepare terminal for autocomplete
+    set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+        ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+
     while (1) {
         scanf(" %c", &c);
+        //c = w_getchar();
         if (i > 0) {
-            if (c == 8) {
+            if (c == BSP) {
                 printf("\033[1D \033[1D");
                 input[i] = '\0';
                 i--;
-            } else if (c == '.' || c == '\n') {
+            } else if (c == '.' || c == ENTER) {
+                break;
+            } else if (c == '\t') {
                 break;
             } else if (c == ESC) {
-                if (getchar() == '[') {
-                    printf("HEJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
-                    const char c2 = getchar();
+                if (w_getchar() == START_BRACKET) {
+                    const char c2 = w_getchar();
                     switch (c2) {
                         case 'A':
                         case 'D':
@@ -291,6 +297,9 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
         }
     }
     input[i] = '\0';
+
+    // Reset terminal mode
+    set_terminal_mode(0,0);
 }
 
 void print_top_of_priority_boxes(const char titles[3][10]) {
@@ -407,4 +416,62 @@ int number_of_words(const char message[]) {
     }
 
     return number_of_words;
+}
+
+/**
+ * Changes terminal mode
+ * If set = clear = 0, then initial terminal mode is set
+ * @param setValues Values to set
+ * @param clearValues Values to clear
+ */
+void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
+    HANDLE hstdin = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    DWORD newMode;
+    static int firstRunFlag = 1;
+    static DWORD initialMode;
+
+    // Get the current input mode
+    if (!GetConsoleMode(hstdin, &mode)) {
+        perror("Error getting console mode");
+        exit(EXIT_FAILURE);
+    }
+
+    // Save initial terminal mode in first run of function
+    if (firstRunFlag) {
+        firstRunFlag = 0;
+        initialMode = mode;
+    }
+
+    if (setValues == 0 && clearValues == 0) {
+        // Set initial mode
+        newMode = initialMode;
+    } else {
+        // Clear and set values
+        newMode = mode & ~clearValues;
+        newMode |= setValues;
+
+    }
+
+    // Set the new input mode
+    if (!SetConsoleMode(hstdin, newMode)) {
+        perror("Error setting console mode");
+        exit(EXIT_FAILURE);
+    }
+}
+
+// todo comments
+int w_getchar() {
+    INPUT_RECORD record;
+    DWORD events;
+    HANDLE hstdin = GetStdHandle(STD_INPUT_HANDLE);
+
+    while (1) {
+        // Wait for and read a single input event
+        if (ReadConsoleInput(hstdin, &record, 1, &events)) {
+            if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown) {
+                return record.Event.KeyEvent.uChar.AsciiChar;
+            }
+        }
+    }
 }

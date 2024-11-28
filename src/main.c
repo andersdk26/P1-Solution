@@ -61,6 +61,7 @@ int main(void) {
         }
         system("cls");
     }
+    set_terminal_mode(0,0);
 
     return EXIT_SUCCESS;
 }

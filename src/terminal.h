@@ -2,8 +2,12 @@
 #define TERMINAL_H
 
 #include "dataHandling.h"
+#include "general.h"
 
 #define ESC 27
+#define BSP 127
+#define ENTER 13
+#define START_BRACKET 91
 #define BOX_WIDTH 48
 #define BOX_PADDING 2
 
@@ -51,5 +55,9 @@ int length_of_longest_word(const char message[]);
 int number_of_words(const char message[]);
 
 void print_result();
+
+void set_terminal_mode(DWORD setValues, DWORD clearValues);
+
+int w_getchar();
 
 #endif //TERMINAL_H
