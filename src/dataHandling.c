@@ -143,7 +143,7 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
                      originStr, destinationStr, originNameStr, destinationNameStr,
                      strtol(travelTimeStr,NULL, 10),
                      (int) round(strtod(emissionStr,NULL)), // Convert decimal to integer
-                     (int) (strtod(emissionStr,NULL) * 100), // Convert price to 1/100
+                     (int) (strtod(priceStr,NULL) * 100), // Convert price to 1/100
                      strtol(downtimeStr,NULL, 10),
                      transportType);
     }
