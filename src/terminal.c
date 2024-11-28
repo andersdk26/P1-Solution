@@ -25,15 +25,17 @@ void box_print(char message[], const char title[]) {
     int previousBreakIndex = 0;
     int breakIndex = BOX_WIDTH - 1;
     for (int n = 0; n < boxHeight - 1; n++) {
+        if (breakIndex >= messageLength) {
+            break;
+        }
         while (message[breakIndex] != ' ') {
             breakIndex--;
         }
-        if (breakIndex < previousBreakIndex || breakIndex >= messageLength) {
+        if (breakIndex < previousBreakIndex) {
             break;
         }
         message[breakIndex] = '#';
         previousBreakIndex = breakIndex;
-        // printf("%d\n", breakIndex);
         breakIndex += BOX_WIDTH + 1;
     }
 
@@ -61,7 +63,7 @@ void box_print(char message[], const char title[]) {
                     break;
                 }
                 printf("%c", message[n]);
-                delay(15);
+                delay(5);
                 n++;
             }
         }
