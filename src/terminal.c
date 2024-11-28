@@ -10,9 +10,6 @@ HANDLE hstdin;
 DWORD mode;
 
 void box_print(char message[], const char title[]) {
-    // TODO: Fix wrap selvom der er plads til ordet.
-    // TODO: Fix at sidste ord bliver sat på en ny linje.
-
     // Get length of message.
     const int messageLength = strlen(message);
 
@@ -99,7 +96,7 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     hstdin = GetStdHandle(STD_INPUT_HANDLE);
 
     GetConsoleMode(hstdin, &mode);
-    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT));
+    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT ));
 
     char *input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
@@ -207,6 +204,8 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     char c;
     char **strings = NULL;
     int stringsAmount = 0;
+    char* autoCompleteString = NULL;
+    unsigned int autoCompleteSelection = 0;
 
     while (1) {
         scanf(" %c", &c);
@@ -215,8 +214,26 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 printf("\033[1D \033[1D");
                 input[i] = '\0';
                 i--;
-            } else if (c == 46) {
+            }
+            else if (c == '.' || c == '\n') {
                 break;
+            } else if (c == ESC) {
+                if (getchar() == '[') {
+                    printf("HEJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
+                    const char c2 = getchar();
+                    switch (c2) {
+                    case 'A':
+                    case 'D':
+                        autoCompleteSelection--;
+                        break;
+                    case 'B':
+                    case 'C':
+                        autoCompleteSelection++;
+                        break;
+                    default:
+                        break;
+                    }
+                }
             }
         }
 
@@ -227,6 +244,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             i++;
         }
 
+        // Autocomplete
         if (searchColumn != sic_none) {
             set_win_color(wc_gray);
 
@@ -244,10 +262,15 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 set_win_color(wc_bright_white);
                 continue;
             }
+            if (autoCompleteSelection >= stringsAmount) {
+                autoCompleteSelection = 0;
+            }
 
-            int stringLength = (int) strlen(strings[0]);
+            int stringLength = (int)strlen(strings[autoCompleteSelection]);
+            autoCompleteString = strings[autoCompleteSelection];
+
             if (stringsAmount > 0 && stringLength > i) {
-                printf("%s ", strings[0] + i);
+                printf("%s ", strings[autoCompleteSelection] + i);
                 for (int j = 0; j < stringLength - i + 1; ++j) {
                     printf("\033[1D");
                 }

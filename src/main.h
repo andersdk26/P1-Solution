@@ -1,8 +1,5 @@
 #ifndef MAIN_H
 #define MAIN_H
-typedef enum {
-    ja
-} preference_e;
 
 static const char TRAIN_ROUTES_CSV_PATH[] = "../data/trainroutes.csv";
 static const char FLIGHT_CSV_PATH[] = "../data/flights.csv";

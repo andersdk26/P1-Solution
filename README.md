@@ -26,8 +26,10 @@ Follow these steps to compile and run the program:
 1. Clone the repository:
    ```bash
    git clone https://github.com/andersdk26/P1-Solution
-   cd optimal-trip-planner
-
+   cd P1-Solution\cmake-build-debug\src\
+   xcopy "..\..\data\" "..\data\"
+   start P1_Solution.exe
+   ```
 ## Usage
 When you run the program, you will be prompted to rate your preferences for each parameter on a scale from 1 to 5:
 
