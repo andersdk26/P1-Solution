@@ -57,6 +57,7 @@ void box_print(char message[], const char title[]) {
         for (int i = 0; i < BOX_WIDTH; i++) {
             if (n < messageLength) {
                 if (message[n] == '#') {
+                    printf("%c", message[n]);
                     if (i == 0) {
                         printf("\033[1A");
                     }
