@@ -28,7 +28,7 @@ void box_print(char message[], const char title[]) {
         while (message[breakIndex] != ' ') {
             breakIndex--;
         }
-        if (breakIndex < previousBreakIndex || breakIndex > messageLength) {
+        if (breakIndex < previousBreakIndex || breakIndex >= messageLength) {
             break;
         }
         message[breakIndex] = '#';
@@ -54,7 +54,6 @@ void box_print(char message[], const char title[]) {
         for (int i = 0; i < BOX_WIDTH; i++) {
             if (n < messageLength) {
                 if (message[n] == '#') {
-                    printf("%c", message[n]);
                     if (i == 0) {
                         printf("\033[1A");
                     }
@@ -96,7 +95,7 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     hstdin = GetStdHandle(STD_INPUT_HANDLE);
 
     GetConsoleMode(hstdin, &mode);
-    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT ));
+    SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT));
 
     char *input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
@@ -124,25 +123,28 @@ void print_journey(const route_s journey) {
 
     printf("\033[4A");
 
-    printf("\033[0G");
-    printf("\033[%dC", 1 + BOX_PADDING);
-    printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
-    printf("\033[1B");
-
-    printf("\033[0G");
-    printf("\033[%dC", 1 + BOX_PADDING);
-    printf("Time:\t%d minutes", journey.travelTime);
-    printf("\033[1B");
-
-    printf("\033[0G");
-    printf("\033[%dC", 1 + BOX_PADDING);
-    printf("Price:\t%.2lf EUR", journey.price / 100.0);
-    printf("\033[1B");
-
-    printf("\033[0G");
-    printf("\033[%dC", 1 + BOX_PADDING);
-    printf("Emission:\t%d CO2e", journey.emission);
-    printf("\033[1B");
+    for (int i = 0; i < 4; i++) {
+        printf("\033[0G");
+        printf("\033[%dC", 1 + BOX_PADDING);
+        switch (i) {
+            case 0:
+                printf("From %s to %s by %s", journey.origin, journey.destination, journey.transportType == 1 ? "Airplane" : "Train");
+                break;
+            case 1:
+                printf("Time:\t%d minutes", journey.travelTime);
+                break;
+            case 2:
+                printf("Price:\t%.2lf EUR", journey.price / 100.0);
+                break;
+            case 3:
+                printf("Emission:\t%d CO2e", journey.emission);
+                break;
+            default:
+                printf("Unknown 'print_journey' case!");
+                exit(EXIT_FAILURE);
+        }
+        printf("\033[1B");
+    }
 
     printf("\033[0G");
     print_bottom_of_box();
@@ -204,7 +206,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     char c;
     char **strings = NULL;
     int stringsAmount = 0;
-    char* autoCompleteString = NULL;
+    char *autoCompleteString = NULL;
     unsigned int autoCompleteSelection = 0;
 
     while (1) {
@@ -214,24 +216,23 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 printf("\033[1D \033[1D");
                 input[i] = '\0';
                 i--;
-            }
-            else if (c == '.' || c == '\n') {
+            } else if (c == '.' || c == '\n') {
                 break;
             } else if (c == ESC) {
                 if (getchar() == '[') {
                     printf("HEJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
                     const char c2 = getchar();
                     switch (c2) {
-                    case 'A':
-                    case 'D':
-                        autoCompleteSelection--;
-                        break;
-                    case 'B':
-                    case 'C':
-                        autoCompleteSelection++;
-                        break;
-                    default:
-                        break;
+                        case 'A':
+                        case 'D':
+                            autoCompleteSelection--;
+                            break;
+                        case 'B':
+                        case 'C':
+                            autoCompleteSelection++;
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -266,7 +267,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 autoCompleteSelection = 0;
             }
 
-            int stringLength = (int)strlen(strings[autoCompleteSelection]);
+            int stringLength = (int) strlen(strings[autoCompleteSelection]);
             autoCompleteString = strings[autoCompleteSelection];
 
             if (stringsAmount > 0 && stringLength > i) {
