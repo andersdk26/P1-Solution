@@ -35,7 +35,7 @@ int main(void) {
         free(inputDestination);
 
         if (routeQuantity < 1) {
-            box_print("Not route found between your two locations. Please try again.", "Uh oh");
+            box_print("No route found between your two locations. Please try again.", "Uh oh");
         } else {
             // Print prioritisation instructions.
             box_print(prioritisationInstructions, "Prioritisation");
