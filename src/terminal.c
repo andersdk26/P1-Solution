@@ -246,7 +246,8 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     char **strings = NULL;
     int stringsAmount = 0;
     char *autoCompleteString = NULL;
-    unsigned int autoCompleteSelection = 0;
+    unsigned int autoCompleteSelection = -1;
+    input[i] = '\0';
 
     // Prepare terminal for autocomplete
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
@@ -287,6 +288,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                             break;
                     }
                 }
+                fflush(stdin);
             }
         }
 
@@ -315,9 +317,8 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 set_win_color(wc_bright_white);
                 continue;
             }
-            if (autoCompleteSelection >= stringsAmount) {
-                autoCompleteSelection = 0;
-            }
+
+            autoCompleteSelection %= stringsAmount;
 
             int stringLength = (int) strlen(strings[autoCompleteSelection]);
             autoCompleteString = strings[autoCompleteSelection];
