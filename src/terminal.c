@@ -258,37 +258,43 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
 
     while (1) {
         c = w_getchar();
-        if (i > 0) {
-            if (c == BSP) {
-                printf("\033[1D \033[1D");
-                input[i] = '\0';
-                i--;
-            } else if (c == '.' || c == ENTER) {
-                break;
-            } else if (c == '\t' && autoCompleteString != NULL) {
-                // Put the suggested autocompletion into the char pointer.
-                strcpy(input, autoCompleteString);
-                printf("\033[%dD", i);
-                printf(input);
-                i = strlen(input);
+
+        if (i > 0 && c == BSP) {
+            // Backspace: delete last char
+            printf("\033[1D \033[1D");
+            input[i] = '\0';
+            i--;
+        } else if (i > 0 && c == ENTER) {
+            // Enter: return input
+            break;
+        } else if (c == '\t' && autoCompleteString != NULL) {
+            // Put the suggested autocompletion into the char pointer.
+            strcpy(input, autoCompleteString);
+
+            // Print auto-completed input
+            printf("\033[%dD", i);
+            printf(input);
+            i = strlen(input);
+
+            continue;
+        } else if (c == ESC) {
+            // Handel escape codes
+            if (w_getchar() != START_BRACKET) {
                 continue;
-            } else if (c == ESC) {
-                if (w_getchar() == START_BRACKET) {
-                    const char c2 = w_getchar();
-                    switch (c2) {
-                        case 'A':
-                        case 'D':
-                            autoCompleteSelection--;
-                            break;
-                        case 'B':
-                        case 'C':
-                            autoCompleteSelection++;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                fflush(stdin);
+            }
+
+            const char c2 = w_getchar();
+            switch (c2) {
+                case 'A': // Up arrow
+                case 'D': // Left arrow
+                    autoCompleteSelection--;
+                    break;
+                case 'B': // Right arrow
+                case 'C': // Down arrow
+                    autoCompleteSelection++;
+                    break;
+                default:
+                    continue;
             }
         }
 
@@ -303,31 +309,42 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
         if (searchColumn != sic_none) {
             set_win_color(wc_gray);
 
+            // Reset auto-complete strings
             free_string_list(strings, stringsAmount, 1);
             strings = NULL;
             stringsAmount = 0;
 
+            // Search in given column
             if (searchColumn == sic_second) {
                 search_second_column(firstColumn, input, &strings, &stringsAmount, routes, routeQuantity);
             } else {
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
+            // Continue if 0 strings match input
             if (stringsAmount < 1) {
                 set_win_color(wc_bright_white);
                 continue;
             }
 
+            // Wrap auto-complete selection var based on amount of strings
             autoCompleteSelection %= stringsAmount;
 
-            int stringLength = (int) strlen(strings[autoCompleteSelection]);
+            // Save selected string
             autoCompleteString = strings[autoCompleteSelection];
 
-            if (stringsAmount > 0 && stringLength > i) {
-                printf("%s ", strings[autoCompleteSelection] + i);
-                for (int j = 0; j < stringLength - i + 1; ++j) {
-                    printf("\033[1D");
+            if (stringsAmount > 0 && strlen(autoCompleteString) > i) {
+                // Print auto-complete string
+                printf("%s", autoCompleteString + i);
+
+                // Clear the rest of the box
+                for (int j = i; j < BOX_WIDTH - BOX_PADDING*2 - 2 - 1; ++j) {
+                    putchar(' ');
                 }
+
+                // Set cursor at next char
+                putchar(0x0D);
+                printf("\033[%dC", i + BOX_PADDING + 1);
             }
 
             set_win_color(wc_bright_white);

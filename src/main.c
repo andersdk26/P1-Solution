@@ -12,11 +12,11 @@ int main(void) {
         route_s *routes = NULL;
         int routeQuantity = 0;
 
-        // Load routes from files
+        // Load routes from files and sort alphabetically
         get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
         get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
+        // get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
         qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
-        //print_routes(routes, routeQuantity);
 
         // Print journey instructions.
         box_print(journeyInstructions, "Journey");

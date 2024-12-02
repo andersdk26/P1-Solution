@@ -12,8 +12,11 @@
 void print_routes(const route_s* list, const int length) {
     set_win_color(wc_default);
     printf("Printing %d routes:\n", length);
+
     printf("%-12s" "%-12s" "%7s" "%8s" "%9s" "\n",
             "Origin", "Destination", "Time", "Price", "Emission");
+
+    // Prints all routes
     for (int i = 0; i < length; ++i) {
         printf("%-12s" "%-12s" "  %5d" "  %6.2lf" "   %5d" "\n",
             list[i].origin, list[i].destination, list[i].travelTime, (double)list[i].price / 100, list[i].emission);
@@ -28,10 +31,13 @@ void print_routes(const route_s* list, const int length) {
  */
 FILE *open_file(const char *fileName, const char *mode) {
     FILE *file = fopen(fileName, mode);
+
+    // Check for errors
     if (file == NULL) {
         perror("Error opening file");
         return NULL;
     }
+
     return file;
 }
 
@@ -43,8 +49,11 @@ FILE *open_file(const char *fileName, const char *mode) {
 int get_file_lines(FILE *file) {
     int count = 0;
     char c;
+
+    // Count lines
     while ((c = (char) fgetc(file)) != EOF) {
         if (c == '\n') {
+            // Line break;
             count++;
         }
     }
@@ -83,11 +92,12 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
     object->transportType = transportType;
 
     // Dynamic allocate strings and insert them as pointers
+    // Origin
     object->origin = memory_allocation(NULL, strlen(originStr) + 1, 0);
     strcpy(object->origin, originStr);
     object->destination = memory_allocation(NULL, strlen(destinationStr) + 1, 0);
     strcpy(object->destination, destinationStr);
-
+    // Destination
     object->originName = memory_allocation(NULL, strlen(originNameStr) + 1, 0);
     strcpy(object->originName, originNameStr);
     object->destinationName = memory_allocation(NULL, strlen(destinationNameStr) + 1, 0);
@@ -101,15 +111,18 @@ void append_route(route_s **routeList, int *routeListLength, const char *originS
  * @param index Index to remove
  */
 void remove_route(route_s **routeList, int *routeListLength, const int index) {
+    // Free string memory
     free((*routeList)[index].origin);
     free((*routeList)[index].destination);
     free((*routeList)[index].originName);
     free((*routeList)[index].destinationName);
 
+    // Remove hole in list
     for (int i = index; i < *routeListLength - 1; ++i) {
         (*routeList)[i] = (*routeList)[i + 1];
     }
 
+    // Shrink memory
     (*routeListLength)--;
     *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s), 0);
 }
@@ -132,13 +145,17 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
             travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
 
-    fgets(line, lineLength, file); // Read first irrelevant row
+    // Read first irrelevant row
+    fgets(line, lineLength, file);
+
+    // Read all lines one by one
     while (fgets(line, lineLength, file) != NULL) {
+        // Split line in substrings
         sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,]",
                originStr, destinationStr, originNameStr, destinationNameStr,
                travelTimeStr, emissionStr, priceStr, downtimeStr);
 
-        // parse parameter values and append them to routes
+        // Parse parameter values and append them to routes
         append_route(routes, routeAmount,
                      originStr, destinationStr, originNameStr, destinationNameStr,
                      strtol(travelTimeStr,NULL, 10),
@@ -158,11 +175,14 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
  * @param stringListLength Length of list
  */
 void append_string(const char *str, char ***stringList, int *stringListLength) {
+    // Expand memory
     (*stringListLength)++;
     *stringList = memory_allocation(*stringList, *stringListLength * sizeof(char *), 0);
 
+    // Insert pointer to allocated empty string
     (*stringList)[*stringListLength - 1] = memory_allocation(NULL, strlen(str) + 1, 0);
 
+    // Insert string at pointer address
     strcpy((*stringList)[*stringListLength - 1], str);
 }
 
@@ -181,9 +201,12 @@ void search_first_column(const char *query, char ***stringList, int *stringListL
     strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
+        // Skip identical strings
         if (i > 0 && stricmp(routes[i - 1].origin, routes[i].origin) == 0) {
             continue;
         }
+
+        // Save matching strings in array
         if (stricmp(query, routes[i].origin) <= 0 && stricmp(query2, routes[i].origin) > 0) {
             append_string(routes[i].origin, stringList, stringListLength);
         }
@@ -207,12 +230,17 @@ void search_second_column(const char *origin, const char *query, char ***stringL
     strcat(query2, "~");
 
     for (int i = 0; i < routeAmount; ++i) {
+        // Skip strings that doesnt match origin
         if (stricmp(origin, routes[i].origin) != 0) {
             continue;
         }
+
+        // Skip identical strings
         if (i > 0 && stricmp(routes[i - 1].destination, routes[i].destination) == 0) {
             continue;
         }
+
+        // Save matching strings in array
         if (stricmp(query, routes[i].destination) <= 0 && stricmp(query2, routes[i].destination) > 0) {
             append_string(routes[i].destination, stringList, stringListLength);
         }
@@ -228,10 +256,11 @@ void search_second_column(const char *origin, const char *query, char ***stringL
  */
 void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
     for (int i = *routeAmount - 1; i >= 0; i--) {
+        // Skip routes that match origin and destination
         if (stricmp((*routes)[i].origin, origin) == 0 && stricmp((*routes)[i].destination, destination) == 0) {
-            // Route matches origin and destination
             continue;
         }
+
         remove_route(routes, routeAmount, i);
     }
 }
@@ -246,6 +275,7 @@ void free_string_list(char **stringList, const int stringListLength, const int d
     for (int i = 0; i < stringListLength; ++i) {
         free(stringList[i]);
     }
+
     if (dynamicList) {
         free(stringList);
     }
@@ -258,12 +288,14 @@ void free_string_list(char **stringList, const int stringListLength, const int d
  * @param dynamicList True for dynamic lists
  */
 void free_route_list(route_s *routeList, const int routeListLength, const int dynamicList) {
+    // Free strings
     for (int i = 0; i < routeListLength; ++i) {
         free(routeList[i].origin);
         free(routeList[i].destination);
         free(routeList[i].originName);
         free(routeList[i].destinationName);
     }
+
     if (dynamicList) {
         free(routeList);
     }
@@ -279,11 +311,13 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
     const route_s *route1 = (route_s *) vp1;
     const route_s *route2 = (route_s *) vp2;
 
+    // Compare origin
     const int result = stricmp(route1->origin, route2->origin);
     if (result != 0) {
         return result;
     }
 
+    // Compare destination
     return stricmp(route1->destination, route2->destination);
 }
 
