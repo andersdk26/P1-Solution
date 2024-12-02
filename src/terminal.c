@@ -231,8 +231,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
         ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
     while (1) {
-        scanf(" %c", &c);
-        //c = w_getchar();
+        c = w_getchar();
         if (i > 0) {
             if (c == BSP) {
                 printf("\033[1D \033[1D");
