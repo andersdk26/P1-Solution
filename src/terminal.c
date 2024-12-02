@@ -246,7 +246,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     char **strings = NULL;
     int stringsAmount = 0;
     char *autoCompleteString = NULL;
-    unsigned int autoCompleteSelection = -1;
+    int autoCompleteSelection = -1;
     input[i] = '\0';
 
     // Prepare terminal for autocomplete
@@ -272,7 +272,9 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             strcpy(input, autoCompleteString);
 
             // Print auto-completed input
-            printf("\033[%dD", i);
+            if (i != 0) {
+                printf("\033[%dD", i);
+            }
             printf(input);
             i = strlen(input);
 
@@ -328,7 +330,11 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             }
 
             // Wrap auto-complete selection var based on amount of strings
-            autoCompleteSelection %= stringsAmount;
+            if (autoCompleteSelection < 0) {
+                autoCompleteSelection = stringsAmount - 1;
+            } else {
+                autoCompleteSelection %= stringsAmount;
+            }
 
             // Save selected string
             autoCompleteString = strings[autoCompleteSelection];
@@ -338,7 +344,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 printf("%s", autoCompleteString + i);
 
                 // Clear the rest of the box
-                for (int j = i; j < BOX_WIDTH - BOX_PADDING*2 - 2 - 1; ++j) {
+                for (int j = i; j < BOX_WIDTH - BOX_PADDING*2 - 2 - 2; ++j) {
                     putchar(' ');
                 }
 
