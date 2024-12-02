@@ -16,7 +16,7 @@ int main(void) {
         get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
         get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
         qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
-        print_routes(routes, routeQuantity);
+        //print_routes(routes, routeQuantity);
 
         // Print journey instructions.
         box_print(journeyInstructions, "Journey");
@@ -41,8 +41,20 @@ int main(void) {
             box_print(prioritisationInstructions, "Prioritisation");
 
             // Get user priorities.
-            int priorities[] = {0, 0, 0};
+            int priorities[] = {-1, -1, -1};
             get_priorities(priorities);
+
+            delay(500);
+            printf(".");
+            delay(500);
+            printf(".");
+            delay(500);
+            printf(".");
+            delay(500);
+            printf(".");
+            delay(500);
+            printf(".");
+            delay(800);
 
             sort_trips(routes, routeQuantity, priorities);
 
@@ -51,6 +63,8 @@ int main(void) {
             print_journey(routes[0]);
         }
 
+        set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+                          ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
         printf("Press 'Q' to quit or any other key to continue.");
         char exit = '\0';
         while (exit == '\0') {
@@ -60,8 +74,9 @@ int main(void) {
             break;
         }
         system("cls");
+        set_terminal_mode(0, 0);
     }
-    set_terminal_mode(0,0);
+    set_terminal_mode(0, 0);
 
     return EXIT_SUCCESS;
 }

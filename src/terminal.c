@@ -102,11 +102,6 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     printf("\033[2A");
     printf("\033[%dC", 1 + BOX_PADDING);
 
-    // hstdin = GetStdHandle(STD_INPUT_HANDLE);
-    //
-    // GetConsoleMode(hstdin, &mode);
-    // SetConsoleMode(hstdin, mode & ~(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT));
-
     char *input = memory_allocation(NULL, BOX_WIDTH + 1, 0);
     set_win_color(wc_bright_white);
     read_characters(input, routes, routeQuantity, searchColumn, firstColumn);
@@ -140,10 +135,10 @@ void print_journey(const route_s journey) {
         printf("\033[%dC", 1 + BOX_PADDING);
         switch (i) {
             case 0:
-                printf("From %s %s", journey.origin, journey.originName);
+                printf("From:\t\t%s (%s)", journey.origin, journey.originName);
                 break;
             case 1:
-                printf("To %s %s", journey.destination, journey.destinationName);
+                printf("To:\t\t\t%s (%s)", journey.destination, journey.destinationName);
                 break;
             case 2:
                 printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
@@ -178,14 +173,17 @@ void get_priorities(int priorities[3]) {
     printf("\033[3C");
     set_win_color(wc_bright_white);
 
-    // TODO: Fix this.
+    set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+                      ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+
+    // TODO: Fix this. Gør så man kan slette sine inputs.
 
     // Get priority for time.
     char p = '\0';
     while (p < 49 || p > 51) {
         p = getchar();
     }
-    priorities[(int) p - '1'] = 1;
+    priorities[(int) p - '1'] = p_time;
     printf("%c", p);
     p = '\0';
 
@@ -193,10 +191,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[9C");
 
     // Get priority for price.
-    while (p < 49 || p > 51 || (int) p - '0' == priorities[0]) {
+    while (p < 49 || p > 51 || priorities[(int) p - '1'] != -1) {
         p = getchar();
     }
-    priorities[(int) p - '1'] = 2;
+    priorities[(int) p - '1'] = p_price;
     printf("%c", p);
     p = '\0';
 
@@ -204,10 +202,10 @@ void get_priorities(int priorities[3]) {
     printf("\033[10C");
 
     // Get priority for emission.
-    while (p < 49 || p > 51 || (int) p - '0' == priorities[0] || (int) p - '0' == priorities[1]) {
+    while (p < 49 || p > 51 || priorities[(int) p - '1'] != -1) {
         p = getchar();
     }
-    priorities[(int) p - '1'] = 3;
+    priorities[(int) p - '1'] = p_emission;
     printf("%c", p);
     p = '\0';
 
@@ -215,6 +213,9 @@ void get_priorities(int priorities[3]) {
     printf("\033[2B");
     printf("\033[0G");
     set_win_color(wc_gray);
+
+    // Reset terminal settings.
+    set_terminal_mode(0, 0);
 }
 
 void read_characters(char *input, const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
@@ -228,7 +229,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
 
     // Prepare terminal for autocomplete
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
-        ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+                      ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
     while (1) {
         c = w_getchar();
@@ -240,7 +241,12 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             } else if (c == '.' || c == ENTER) {
                 break;
             } else if (c == '\t') {
-                break;
+                // Put the suggested autocompletion into the char pointer.
+                strcpy(input, autoCompleteString);
+                printf("\033[%dD", i);
+                printf(input);
+                i = strlen(input);
+                continue;
             } else if (c == ESC) {
                 if (w_getchar() == START_BRACKET) {
                     const char c2 = w_getchar();
@@ -305,7 +311,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     input[i] = '\0';
 
     // Reset terminal mode
-    set_terminal_mode(0,0);
+    set_terminal_mode(0, 0);
 }
 
 void print_top_of_priority_boxes(const char titles[3][10]) {
@@ -456,7 +462,6 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
         // Clear and set values
         newMode = mode & ~clearValues;
         newMode |= setValues;
-
     }
 
     // Set the new input mode
