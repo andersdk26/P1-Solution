@@ -240,7 +240,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 i--;
             } else if (c == '.' || c == ENTER) {
                 break;
-            } else if (c == '\t') {
+            } else if (c == '\t' && autoCompleteString != NULL) {
                 // Put the suggested autocompletion into the char pointer.
                 strcpy(input, autoCompleteString);
                 printf("\033[%dD", i);

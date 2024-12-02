@@ -44,21 +44,9 @@ int main(void) {
             int priorities[] = {-1, -1, -1};
             get_priorities(priorities);
 
-            delay(500);
-            printf(".");
-            delay(500);
-            printf(".");
-            delay(500);
-            printf(".");
-            delay(500);
-            printf(".");
-            delay(500);
-            printf(".");
-            delay(800);
-
             sort_trips(routes, routeQuantity, priorities);
 
-            print_routes(routes, routeQuantity);
+            //print_routes(routes, routeQuantity);
 
             print_journey(routes[0]);
         }
