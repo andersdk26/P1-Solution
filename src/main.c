@@ -48,6 +48,8 @@ int main(void) {
 
             //print_routes(routes, routeQuantity);
 
+            // TODO: Print tabel over alternative rejser.
+
             print_journey(routes[0]);
         }
 

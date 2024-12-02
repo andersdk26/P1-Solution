@@ -176,7 +176,26 @@ void get_priorities(int priorities[3]) {
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Fix this. Gør så man kan slette sine inputs.
+    // TODO: Gør så man kan gå tilbage i sine prioriteter.
+    char c = '\0';
+    int n = 0;
+    while (n < 3) {
+        while (c < 49 || c > 51 || priorities[(int) c - '1'] != -1) {
+            c = w_getchar();
+        }
+        priorities[(int) c - '1'] = n;
+        printf("%c", c);
+        c = '\0';
+        n++;
+
+        if (n == 1) {
+            printf("\033[9C");
+        } else if (n == 2) {
+            printf("\033[10C");
+        }
+    }
+
+    /*
 
     // Get priority for time.
     char p = '\0';
@@ -209,6 +228,8 @@ void get_priorities(int priorities[3]) {
     printf("%c", p);
     p = '\0';
 
+    */
+
     // Move cursor out of the box and change text color.
     printf("\033[2B");
     printf("\033[0G");
@@ -230,6 +251,9 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     // Prepare terminal for autocomplete
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+
+    // TODO: Fix at grå tekst ikke forsvinder når man skriver et kortere by navn ind.
+    // TODO: Få autocomplete til at overskrive hele tekstfeltet med mellemrum.
 
     while (1) {
         c = w_getchar();
