@@ -253,8 +253,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Fix at grå tekst ikke forsvinder når man skriver et kortere by navn ind.
-    // TODO: Få autocomplete til at overskrive hele tekstfeltet med mellemrum.
+    // TODO: Problemer med autocomplete efter BSP
 
     while (1) {
         c = w_getchar();
@@ -264,6 +263,9 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             printf("\033[1D \033[1D");
             input[i] = '\0';
             i--;
+            if (i == 0) {
+                input[0] = '\0';
+            }
         } else if (i > 0 && c == ENTER) {
             // Enter: return input
             break;
@@ -320,6 +322,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             if (searchColumn == sic_second) {
                 search_second_column(firstColumn, input, &strings, &stringsAmount, routes, routeQuantity);
             } else {
+                printf("%d", i);
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
