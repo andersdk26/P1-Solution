@@ -322,7 +322,6 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
             if (searchColumn == sic_second) {
                 search_second_column(firstColumn, input, &strings, &stringsAmount, routes, routeQuantity);
             } else {
-                printf("%d", i);
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
