@@ -41,6 +41,7 @@ FILE *open_file(const char *fileName, const char *mode) {
     return file;
 }
 
+// TODO useless?
 /**
  * Counts lines in a file
  * @param file File object to read
@@ -127,7 +128,7 @@ void remove_route(route_s **routeList, int *routeListLength, const int index) {
     *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s), 0);
 }
 
-// todo: error handling
+// todo: error handling - continue, print error
 /**
  * Searches for specific route in a file and appends resulting object to routes
  * (File should be alphabetically ordered)
