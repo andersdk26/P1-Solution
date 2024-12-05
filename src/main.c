@@ -61,6 +61,12 @@ int main(void) {
             }
         }
 
+        // Free memory
+        free_route_list(routes, routeQuantity, 1);
+        routes = NULL;
+        routeQuantity = 0;
+
+        // Print exit box and handle input
         delay(1000);
         set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                           ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
