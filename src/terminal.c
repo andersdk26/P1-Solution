@@ -225,8 +225,7 @@ void get_priorities(int priorities[3]) {
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Gør så man kan gå tilbage i sine prioriteter.
-    // TODO: Skriv kommentarer når det er gjort.
+    // TODO: Gør så man kan gå tilbage i sine prioriteter. Skriv kommentarer.
 
     char c = '\0';
     int n = 0;
