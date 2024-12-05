@@ -56,8 +56,10 @@ int main(void) {
             // Print the best journey.
             print_best_journey(routes[0]);
 
-            // Print alternative journeys.
-            print_alternative_journeys(routes + 1, routeQuantity - 1);
+            // Print alternative journeys if any exist.
+            if (routeQuantity - 1 > 0) {
+                print_alternative_journeys(routes + 1, routeQuantity - 1);
+            }
         }
 
         delay(1000);
