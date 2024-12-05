@@ -5,7 +5,6 @@
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"
-#include "journey.h"
 
 int main(void) {
     while (1) {
@@ -47,18 +46,19 @@ int main(void) {
             int priorities[] = {-1, -1, -1};
             get_priorities(priorities);
 
+            // Sort trips based on priorities.
             sort_trips(routes, routeQuantity, priorities);
 
-            //print_routes(routes, routeQuantity);
+            // Print the best journey.
+            print_best_journey(routes[0]);
 
-            // TODO: Print tabel over alternative rejser.
-
-            print_journey(routes[0]);
+            // Print alternative journeys.
+            print_alternative_journeys(routes + 1, routeQuantity - 1);
         }
 
         set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                           ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
-        delay(3000);
+        delay(1000);
         box_print(endMessage, "End");
         char exit = '\0';
         while (exit == '\0') {
