@@ -18,7 +18,6 @@ int main(void) {
         // Load routes from files and sort alphabetically
         get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
         get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
-        // get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
         sort_routes(routes, routeQuantity);
 
         // Print start location instructions.
