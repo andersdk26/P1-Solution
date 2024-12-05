@@ -574,7 +574,10 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
     }
 }
 
-// todo comments
+/**
+ * Read raw input from windows terminal
+ * @return Char as int value
+ */
 int w_getchar() {
     INPUT_RECORD record;
     DWORD events;
@@ -588,4 +591,77 @@ int w_getchar() {
             }
         }
     }
+}
+
+/**
+ * Prints a error message
+ * @param msg Error message
+ */
+void print_error(const char *msg) {
+    set_win_color(wc_light_red_hgl);
+
+    if (stderr == NULL) {
+        printf("%s.\n", msg);
+    } else {
+        perror(msg);
+    }
+
+    set_win_color(wc_default);
+}
+
+/**
+ * String to int with error check
+ * @param start String to convert
+ * @param base Base of number
+ * @return Parsed integer
+ */
+int strtol_check(const char *start, const int base) {
+    char *end;
+    errno = 0; // Reset error
+
+    // Parse int
+    const int result = strtol(start, &end, base);
+
+    // Catch error
+    if (end == start) {
+        print_error("Error: no digits was read");
+    } else if (end == start) {
+        print_error("Error: no digits was read");
+    } else if (errno == ERANGE && result == LONG_MIN) {
+        print_error("Error: underflow");
+    } else if (errno == ERANGE) {
+        print_error("Error: overflow");
+    } else if (errno == ERANGE) {
+        print_error("Error: invalid base");
+    } else if (errno != 0) {
+        print_error("Error: unknown error");
+    }
+
+    return result;
+}
+
+/**
+ * String to double with error check
+ * @param start String to convert
+ * @return Parsed double
+ */
+double strtod_check(const char *start) {
+    char *end;
+    errno = 0; // Reset error
+
+    // Parse int
+    const double result = strtod(start, &end);
+
+    // Catch error
+    if (end == start) {
+        print_error("Error: no digits was read");
+    } else if (errno == ERANGE && result == LONG_MIN) {
+        print_error("Error: underflow");
+    } else if (errno == ERANGE) {
+        print_error("Error: overflow");
+    } else if (errno != 0) {
+        print_error("Error: unknown error");
+    }
+
+    return result;
 }

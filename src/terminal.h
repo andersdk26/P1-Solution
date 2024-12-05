@@ -60,4 +60,10 @@ void set_terminal_mode(DWORD setValues, DWORD clearValues);
 
 int w_getchar();
 
+void print_error(const char *msg);
+
+int strtol_check(const char *start, int base);
+
+double strtod_check(const char *start);
+
 #endif //TERMINAL_H

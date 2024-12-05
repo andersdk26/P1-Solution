@@ -1,5 +1,6 @@
 #include "dataHandling.h"
 #include "general.h"
+#include "terminal.h"
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
@@ -139,12 +140,8 @@ void remove_route(route_s **routeList, int *routeListLength, const int index) {
  */
 void get_all_routes(const char *fileName, const transportType_e transportType, route_s **routes, int *routeAmount) {
     FILE *file = open_file(fileName, "r");
-
-    // Temporary strings
     const int lineLength = 200;
     char line[lineLength];
-    char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
-            travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
 
     // Read first irrelevant row
     fgets(line, lineLength, file);
@@ -152,18 +149,22 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     // Read all lines one by one
     while (fgets(line, lineLength, file) != NULL) {
         // Split line in substrings
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,]",
+        char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
+            travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%s",
                originStr, destinationStr, originNameStr, destinationNameStr,
                travelTimeStr, emissionStr, priceStr, downtimeStr);
 
-        // Parse parameter values and append them to routes
+        // Parse parameters and catch error
+        const int travelTime = strtol_check(travelTimeStr, 10);
+        const int emission = (int) round(strtod_check(emissionStr)); // Convert decimal to integer
+        const int price = (int) (strtod_check(priceStr) * 100); // Convert price to 1/100
+        const int downTime = strtol_check(downtimeStr, 10);
+
+        // Append parameter to routes
         append_route(routes, routeAmount,
                      originStr, destinationStr, originNameStr, destinationNameStr,
-                     strtol(travelTimeStr,NULL, 10),
-                     (int) round(strtod(emissionStr,NULL)), // Convert decimal to integer
-                     (int) (strtod(priceStr,NULL) * 100), // Convert price to 1/100
-                     strtol(downtimeStr,NULL, 10),
-                     transportType);
+                     travelTime, emission, price, downTime, transportType);
     }
 
     fclose(file);
