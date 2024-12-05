@@ -18,11 +18,14 @@ int main(void) {
         //get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
         qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
-        // Print journey instructions.
-        box_print(journeyInstructions, "Journey");
+        // Print start location instructions.
+        box_print(instructionsStart, "Journey");
 
         // Get start location.
         char *inputStart = box_read("Start", routes, routeQuantity, sic_first, "");
+
+        // Print destination instructions.
+        box_print(instructionsDestination, "Journey");
 
         // Get destination.
         char *inputDestination = box_read("Destination", routes, routeQuantity, sic_second, inputStart);
@@ -35,7 +38,7 @@ int main(void) {
         free(inputDestination);
 
         if (routeQuantity < 1) {
-            box_print("No route found between your two locations. Please try again.", "Uh oh");
+            box_print(noJourney, "Uh oh");
         } else {
             // Print prioritisation instructions.
             box_print(prioritisationInstructions, "Prioritisation");
@@ -55,7 +58,8 @@ int main(void) {
 
         set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                           ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
-        printf("Press 'Q' to quit or any other key to continue.");
+        delay(3000);
+        box_print(endMessage, "End");
         char exit = '\0';
         while (exit == '\0') {
             scanf("%c", &exit);

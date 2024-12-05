@@ -172,10 +172,11 @@ void print_journey(const route_s journey) {
                 printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
                 break;
             case 3: // Print price.
+                // TODO: Vis tid i timer og minutter.
                 printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
                 break;
             case 4: // Print emission.
-                printf("Emission:\t\t%d kg CO2e per passenger.", journey.emission);
+                printf("Emission:\t\t%d kg CO2e per passenger", journey.emission);
                 break;
             default: // Error if unknown case.
                 printf("Unknown 'print_journey' case!");
