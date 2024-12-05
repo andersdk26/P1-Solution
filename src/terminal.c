@@ -183,11 +183,16 @@ void print_best_journey(const route_s journey) {
 }
 
 void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) {
+    // Print top of box with title.
     print_top_of_box("Alternative journeys", wc_light_blue);
+
+    // Print table "categories".
     print_middle_of_box();
     set_win_color(wc_bright_white);
     printf("\033[1A\033[%dG", 1 + BOX_PADDING);
     printf("Vehicle\tTime\tPrice\t\tEmission\n");
+
+    // Print alternative journeys.
     for (int i = 0; i < numberOfJourneys; i++) {
         char journey[BOX_WIDTH];
         print_middle_of_box();
@@ -198,6 +203,7 @@ void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) 
         printf(journey);
     }
 
+    // Print the bottom of the box.
     print_bottom_of_box();
 }
 
