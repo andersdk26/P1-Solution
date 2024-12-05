@@ -616,7 +616,7 @@ void print_error(const char *msg) {
  * @param base Base of number
  * @return Parsed integer
  */
-int strtol_check(const char *start, const int base) {
+int strtol_check(const char *start, const int base, int *errorFlag) {
     char *end;
     errno = 0; // Reset error
 
@@ -626,16 +626,19 @@ int strtol_check(const char *start, const int base) {
     // Catch error
     if (end == start) {
         print_error("Error: no digits was read");
-    } else if (end == start) {
-        print_error("Error: no digits was read");
+        *errorFlag = 1;
     } else if (errno == ERANGE && result == LONG_MIN) {
         print_error("Error: underflow");
+        *errorFlag = 1;
     } else if (errno == ERANGE) {
         print_error("Error: overflow");
-    } else if (errno == ERANGE) {
+        *errorFlag = 1;
+    } else if (errno == EINVAL) {
         print_error("Error: invalid base");
+        *errorFlag = 1;
     } else if (errno != 0) {
         print_error("Error: unknown error");
+        *errorFlag = 1;
     }
 
     return result;
@@ -646,7 +649,7 @@ int strtol_check(const char *start, const int base) {
  * @param start String to convert
  * @return Parsed double
  */
-double strtod_check(const char *start) {
+double strtod_check(const char *start, int *errorFlag) {
     char *end;
     errno = 0; // Reset error
 
@@ -656,12 +659,16 @@ double strtod_check(const char *start) {
     // Catch error
     if (end == start) {
         print_error("Error: no digits was read");
+        *errorFlag = 1;
     } else if (errno == ERANGE && result == LONG_MIN) {
         print_error("Error: underflow");
+        *errorFlag = 1;
     } else if (errno == ERANGE) {
         print_error("Error: overflow");
+        *errorFlag = 1;
     } else if (errno != 0) {
         print_error("Error: unknown error");
+        *errorFlag = 1;
     }
 
     return result;

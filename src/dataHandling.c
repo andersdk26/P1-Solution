@@ -156,10 +156,15 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
                travelTimeStr, emissionStr, priceStr, downtimeStr);
 
         // Parse parameters and catch error
-        const int travelTime = strtol_check(travelTimeStr, 10);
-        const int emission = (int) round(strtod_check(emissionStr)); // Convert decimal to integer
-        const int price = (int) (strtod_check(priceStr) * 100); // Convert price to 1/100
-        const int downTime = strtol_check(downtimeStr, 10);
+        int errorFlag = 0;
+        const int travelTime = strtol_check(travelTimeStr, 10, &errorFlag);
+        const int emission = (int) round(strtod_check(emissionStr, &errorFlag)); // Convert decimal to integer
+        const int price = (int) (strtod_check(priceStr, &errorFlag) * 100); // Convert price to 1/100
+        const int downTime = strtol_check(downtimeStr, 10, &errorFlag);
+
+        if (errorFlag) {
+            continue;
+        }
 
         // Append parameter to routes
         append_route(routes, routeAmount,

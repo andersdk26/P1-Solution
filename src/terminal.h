@@ -62,8 +62,8 @@ int w_getchar();
 
 void print_error(const char *msg);
 
-int strtol_check(const char *start, int base);
+int strtol_check(const char *start, int base, int *errorFlag);
 
-double strtod_check(const char *start);
+double strtod_check(const char *start, int *errorFlag);
 
 #endif //TERMINAL_H
