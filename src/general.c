@@ -59,6 +59,13 @@ void print_warning(const char* msg) {
     set_win_color(wc_default);
 }
 
+void check_input(const char* input) {
+    if (input == NULL) {
+        print_error("Input error");
+        exit(EXIT_FAILURE);
+    }
+}
+
 /**
  * Allocates specific memory size
  * @param p pointer

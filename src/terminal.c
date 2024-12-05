@@ -187,21 +187,27 @@ void print_best_journey(const route_s journey) {
 }
 
 void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) {
+    // Print top of box with title.
     print_top_of_box("Alternative journeys", wc_light_blue);
+
+    // Print table "categories".
     print_middle_of_box();
     set_win_color(wc_bright_white);
-    printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+    printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
     printf("Vehicle\tTime\tPrice\t\tEmission\n");
+
+    // Print alternative journeys.
     for (int i = 0; i < numberOfJourneys; i++) {
         char journey[BOX_WIDTH];
         print_middle_of_box();
         set_win_color(wc_bright_white);
-        printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+        printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
         sprintf(journey, "%s\t%02d:%02d\t%.2lf EUR\t%d kg\n", journeys[i].transportType == 1 ? "Airplane" : "Train   ", (journeys[i].travelTime + journeys[i].downtime) / 60, (journeys[i].travelTime + journeys[i].downtime) % 60, journeys[i].price / 100.00,
                 journeys[i].emission);
         printf(journey);
     }
 
+    // Print the bottom of the box.
     print_bottom_of_box();
 }
 
@@ -223,8 +229,7 @@ void get_priorities(int priorities[3]) {
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Gør så man kan gå tilbage i sine prioriteter.
-    // TODO: Skriv kommentarer når det er gjort.
+    // TODO: Gør så man kan gå tilbage i sine prioriteter. Skriv kommentarer.
 
     char c = '\0';
     int n = 0;

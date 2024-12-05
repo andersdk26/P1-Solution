@@ -154,7 +154,6 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     }
 
     fclose(file);
-    loading_bar(0);
 }
 
 /**
@@ -322,17 +321,18 @@ int compare_trips(void *param, const void *a, const void *b) {
     const route_s *trip_b = (const route_s *) b; // Cast second trip to route_s
     const priority_e *priorities = (priority_e *) param; // Cast parameter to priority array
 
+    // Iterate through the priority list
     for (int i = 0; i < 3; ++i) {
         switch (priorities[i]) {
-            case p_time:
+            case p_time: // Compare total travel time including downtime
                 if (trip_a->travelTime + trip_a->downtime < trip_b->travelTime + trip_b->downtime) return -1;
                 if (trip_a->travelTime + trip_a->downtime > trip_b->travelTime + trip_b->downtime) return 1;
                 break;
-            case p_price:
+            case p_price: // Compare price
                 if (trip_a->price < trip_b->price) return -1;
                 if (trip_a->price > trip_b->price) return 1;
                 break;
-            case p_emission:
+            case p_emission: // Compare emissions
                 if (trip_a->emission < trip_b->emission) return -1;
                 if (trip_a->emission > trip_b->emission) return 1;
                 break;
