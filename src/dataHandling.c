@@ -1,9 +1,9 @@
 #include "dataHandling.h"
 #include "general.h"
-#include "terminal.h"
-#include <ctype.h>
 #include <string.h>
 #include <math.h>
+
+#include "terminal.h"
 
 /**
  * Prints the given list of routes
@@ -35,31 +35,11 @@ FILE *open_file(const char *fileName, const char *mode) {
 
     // Check for errors
     if (file == NULL) {
-        perror("Error opening file");
+        print_error("Error opening file");
         return NULL;
     }
 
     return file;
-}
-
-// TODO useless?
-/**
- * Counts lines in a file
- * @param file File object to read
- * @return Amount of lines in the file
- */
-int get_file_lines(FILE *file) {
-    int count = 0;
-    char c;
-
-    // Count lines
-    while ((c = (char) fgetc(file)) != EOF) {
-        if (c == '\n') {
-            // Line break;
-            count++;
-        }
-    }
-    return count + 1;
 }
 
 /**

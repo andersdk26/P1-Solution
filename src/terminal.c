@@ -58,7 +58,7 @@ void box_print(const char originalMessage[], const char title[]) {
     }
 
     // Print top side of text box.
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     int n = 0;
 
@@ -100,7 +100,7 @@ void box_print(const char originalMessage[], const char title[]) {
 char *box_read(const char title[], const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
                const char *firstColumn) {
     // Print the top of the box.
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     // Print the left and right side of the box with spaces in between.
     print_middle_of_box();
@@ -121,8 +121,8 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     printf("\033[2E");
     set_win_color(wc_gray);
 
-    // Check if input is valid and return if so.
-    check_input(input);
+    // // Check if input is valid and return if so.
+    // check_input(input);
     return input;
 }
 
@@ -132,7 +132,7 @@ void print_best_journey(const route_s journey) {
 
     // Create title of box.
     sprintf(title, "Your best journey is by %s", journey.transportType == 1 ? "airplane" : "train");
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     // Print 5 "center slices" of a box.
     for (int i = 0; i < 5; i++) {
@@ -183,7 +183,7 @@ void print_best_journey(const route_s journey) {
 }
 
 void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) {
-    print_top_of_box("Alternative journeys");
+    print_top_of_box("Alternative journeys", wc_light_blue);
     print_middle_of_box();
     set_win_color(wc_bright_white);
     printf("\033[1A\033[%dG", 1 + BOX_PADDING);
@@ -456,13 +456,13 @@ void print_bottom_of_priority_boxes(const char titles[3][10]) {
     printf("\n");
 }
 
-void print_top_of_box(const char title[]) {
+void print_top_of_box(const char title[], const winColor_e titleColor) {
     // Print top left corner and set font to bold for title.
     set_win_color(wc_gray);
     printf("%c%c \033[1m", 201, 181);
 
     // Set text color and print box title.
-    set_win_color(wc_light_blue);
+    set_win_color(titleColor);
     int i = strlen(title);
     printf(title);
 
@@ -552,7 +552,7 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
 
     // Get the current input mode
     if (!GetConsoleMode(hstdin, &mode)) {
-        perror("Error getting console mode");
+        print_error("Could not getting console mode");
         exit(EXIT_FAILURE);
     }
 
@@ -573,7 +573,7 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
 
     // Set the new input mode
     if (!SetConsoleMode(hstdin, newMode)) {
-        perror("Error setting console mode");
+        print_error("Could not setting console mode");
         exit(EXIT_FAILURE);
     }
 }
@@ -602,77 +602,26 @@ int w_getchar() {
  * @param msg Error message
  */
 void print_error(const char *msg) {
-    set_win_color(wc_light_red_hgl);
+    char title[12] = "Error";
 
-    if (stderr == NULL) {
+    if (errno != 0) {
+        sprintf(title, "%s %d", title, errno);
+    }
+
+    print_top_of_box(title, wc_red);
+    print_middle_of_box();
+    printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+
+    set_win_color(wc_light_red);
+
+    if (errno == 0) {
         printf("%s.\n", msg);
     } else {
         perror(msg);
     }
 
     set_win_color(wc_default);
+
+    print_bottom_of_box();
 }
 
-/**
- * String to int with error check
- * @param start String to convert
- * @param base Base of number
- * @return Parsed integer
- */
-int strtol_check(const char *start, const int base, int *errorFlag) {
-    char *end;
-    errno = 0; // Reset error
-
-    // Parse int
-    const int result = strtol(start, &end, base);
-
-    // Catch error
-    if (end == start) {
-        print_error("Error: no digits was read");
-        *errorFlag = 1;
-    } else if (errno == ERANGE && result == LONG_MIN) {
-        print_error("Error: underflow");
-        *errorFlag = 1;
-    } else if (errno == ERANGE) {
-        print_error("Error: overflow");
-        *errorFlag = 1;
-    } else if (errno == EINVAL) {
-        print_error("Error: invalid base");
-        *errorFlag = 1;
-    } else if (errno != 0) {
-        print_error("Error: unknown error");
-        *errorFlag = 1;
-    }
-
-    return result;
-}
-
-/**
- * String to double with error check
- * @param start String to convert
- * @return Parsed double
- */
-double strtod_check(const char *start, int *errorFlag) {
-    char *end;
-    errno = 0; // Reset error
-
-    // Parse int
-    const double result = strtod(start, &end);
-
-    // Catch error
-    if (end == start) {
-        print_error("Error: no digits was read");
-        *errorFlag = 1;
-    } else if (errno == ERANGE && result == LONG_MIN) {
-        print_error("Error: underflow");
-        *errorFlag = 1;
-    } else if (errno == ERANGE) {
-        print_error("Error: overflow");
-        *errorFlag = 1;
-    } else if (errno != 0) {
-        print_error("Error: unknown error");
-        *errorFlag = 1;
-    }
-
-    return result;
-}

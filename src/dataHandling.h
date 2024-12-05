@@ -29,7 +29,6 @@ typedef struct {
 
 void print_routes(const route_s *list, int length);
 FILE* open_file(const char *fileName, const char *mode);
-int get_file_lines(FILE *file);
 void append_route(route_s **routeList, int *routeListLength, const char *originStr, const char *destinationStr,
                   const char *originNameStr, const char *destinationNameStr, int travelTime, int emission,
                   int price, int downtime, transportType_e transportType);
