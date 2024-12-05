@@ -35,7 +35,7 @@ FILE *open_file(const char *fileName, const char *mode) {
 
     // Check for errors
     if (file == NULL) {
-        print_error("Error opening file");
+        print_error("Could not open file");
         return NULL;
     }
 
@@ -109,7 +109,6 @@ void remove_route(route_s **routeList, int *routeListLength, const int index) {
     *routeList = memory_allocation(*routeList, *routeListLength * sizeof(route_s), 0);
 }
 
-// todo: error handling - continue, print error
 /**
  * Searches for specific route in a file and appends resulting object to routes
  * (File should be alphabetically ordered)

@@ -21,7 +21,7 @@ void box_print(const char originalMessage[], const char title[]) {
 
     // Check if the box has room for the longest word in the message.
     if (BOX_WIDTH < length_of_longest_word(message)) {
-        printf("ERROR: Box width is less than the length of the longest word in the message.\n");
+        print_error("Box width is less than the length of the longest word in the message.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -169,7 +169,7 @@ void print_best_journey(const route_s journey) {
                 printf("Emission:\t\t%d kg CO2e per passenger", journey.emission);
                 break;
             default: // Error if unknown case.
-                printf("Unknown 'print_journey' case!");
+                print_error("Unknown 'print_journey' case!");
                 exit(EXIT_FAILURE);
         }
 
