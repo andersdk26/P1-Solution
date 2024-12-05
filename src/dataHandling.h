@@ -29,7 +29,6 @@ typedef struct {
 
 void print_routes(const route_s *list, int length);
 FILE* open_file(const char *fileName, const char *mode);
-int get_file_lines(FILE *file);
 void append_route(route_s **routeList, int *routeListLength, const char *originStr, const char *destinationStr,
                   const char *originNameStr, const char *destinationNameStr, int travelTime, int emission,
                   int price, int downtime, transportType_e transportType);
@@ -44,6 +43,7 @@ void remove_mismatches(const char *origin, const char *destination, route_s **ro
 void free_string_list(char **stringList, int stringListLength, int dynamicList);
 void free_route_list(route_s *routeList, int routeListLength, int dynamicList);
 int alphabetic_route_compare(const void *vp1, const void *vp2);
+void sort_routes(route_s* routes, int routeQuantity);
 int compare_trips(void *param, const void *a, const void *b);
 void sort_trips(route_s *trips, size_t num_trips, void *priorities);
 

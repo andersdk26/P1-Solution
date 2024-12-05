@@ -1,11 +1,12 @@
 #include "general.h"
+#include "terminal.h"
 
 /**
  * Sets text color in Windows terminal
  * @param color Color code
  */
 void set_win_color(const winColor_e color) {
-    // Only run for windows OS
+    // Only run for Windows OS
 #ifdef _WINDOWS_
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -60,7 +61,7 @@ void print_warning(const char* msg) {
 
 void check_input(const char* input) {
     if (input == NULL) {
-        perror("Error");
+        print_error("Input error");
         exit(EXIT_FAILURE);
     }
 }
@@ -75,6 +76,7 @@ void check_input(const char* input) {
 void* memory_allocation(void* p, const size_t size, const int clear) {
     void* lastP = NULL;
 
+    // Free if size < 1
     if (size < 1) {
         free(p);
         return NULL;
@@ -97,10 +99,74 @@ void* memory_allocation(void* p, const size_t size, const int clear) {
 
     // Check for error
     if (p == NULL) {
-        perror("Memory allocation error");
+        print_error("Memory allocation failed");
         free(lastP);
         exit(EXIT_FAILURE);
     }
 
     return p;
+}
+
+/**
+ * String to int with error check
+ * @param start String to convert
+ * @param base Base of number
+ * @return Parsed integer
+ */
+int strtol_check(const char *start, const int base, int *errorFlag) {
+    char *end;
+    errno = 0; // Reset error
+
+    // Parse int
+    const int result = strtol(start, &end, base);
+
+    // Catch error
+    if (end == start) {
+        print_error("Error: no digits was read");
+        *errorFlag = 1;
+    } else if (errno == ERANGE && result == LONG_MIN) {
+        print_error("Underflow");
+        *errorFlag = 1;
+    } else if (errno == ERANGE) {
+        print_error("Overflow");
+        *errorFlag = 1;
+    } else if (errno == EINVAL) {
+        print_error("Invalid base");
+        *errorFlag = 1;
+    } else if (errno != 0) {
+        print_error("Unknown error");
+        *errorFlag = 1;
+    }
+
+    return result;
+}
+
+/**
+ * String to double with error check
+ * @param start String to convert
+ * @return Parsed double
+ */
+double strtod_check(const char *start, int *errorFlag) {
+    char *end;
+    errno = 0; // Reset error
+
+    // Parse double
+    const double result = strtod(start, &end);
+
+    // Catch error
+    if (end == start) {
+        print_error("No digits was read");
+        *errorFlag = 1;
+    } else if (errno == ERANGE && result == LONG_MIN) {
+        print_error("Underflow");
+        *errorFlag = 1;
+    } else if (errno == ERANGE) {
+        print_error("Overflow");
+        *errorFlag = 1;
+    } else if (errno != 0) {
+        print_error("Unknown error");
+        *errorFlag = 1;
+    }
+
+    return result;
 }

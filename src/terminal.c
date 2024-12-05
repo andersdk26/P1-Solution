@@ -1,8 +1,12 @@
 #include "terminal.h"
 
+#include <fcntl.h>
+#include <io.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
+
 
 #include "general.h"
 
@@ -21,7 +25,7 @@ void box_print(const char originalMessage[], const char title[]) {
 
     // Check if the box has room for the longest word in the message.
     if (BOX_WIDTH < length_of_longest_word(message)) {
-        printf("ERROR: Box width is less than the length of the longest word in the message.\n");
+        print_error("Box width is less than the length of the longest word in the message.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -58,18 +62,14 @@ void box_print(const char originalMessage[], const char title[]) {
     }
 
     // Print top side of text box.
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     int n = 0;
 
     while (n < messageLength) {
         // While the end of the message has not been reached.
         // Print a middle slice of the box.
-        print_left_side_of_box();
-        for (int i = 0; i < BOX_WIDTH; i++) {
-            printf(" ");
-        }
-        print_right_side_of_box();
+        print_middle_of_box();
 
         // Change text color and move to the start of the slice.
         set_win_color(wc_bright_white);
@@ -104,14 +104,10 @@ void box_print(const char originalMessage[], const char title[]) {
 char *box_read(const char title[], const route_s *routes, const int routeQuantity, const searchInColumn_e searchColumn,
                const char *firstColumn) {
     // Print the top of the box.
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     // Print the left and right side of the box with spaces in between.
-    printf("%c", 186);
-    for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
-        printf(" ");
-    }
-    printf("%c\n", 186);
+    print_middle_of_box();
 
     // Print the bottom of the box.
     print_bottom_of_box();
@@ -129,35 +125,30 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     printf("\033[2E");
     set_win_color(wc_gray);
 
-    // Check if input is valid and return if so.
-    check_input(input);
+    // // Check if input is valid and return if so.
+    // check_input(input);
     return input;
 }
 
-void print_journey(const route_s journey) {
+void print_best_journey(const route_s journey) {
     // Allocate memory for the longest allowed box title.
     char title[BOX_WIDTH];
 
     // Create title of box.
     sprintf(title, "Your best journey is by %s", journey.transportType == 1 ? "airplane" : "train");
-    print_top_of_box(title);
+    print_top_of_box(title, wc_light_blue);
 
     // Print 5 "center slices" of a box.
     for (int i = 0; i < 5; i++) {
-        print_left_side_of_box();
-        for (int j = 0; j < BOX_WIDTH; j++) {
-            printf(" ");
-        }
-        print_right_side_of_box();
+        print_middle_of_box();
     }
 
     // Change text color and go to the first "slice".
     set_win_color(wc_bright_white);
     printf("\033[5A");
 
-
+    // For every "slice".
     for (int i = 0; i < 5; i++) {
-        // For every "slice".
         // Go the first column and add padding.
         printf("\033[0G");
         printf("\033[%dC", 1 + BOX_PADDING);
@@ -169,17 +160,20 @@ void print_journey(const route_s journey) {
                 printf("To:\t\t\t%s (%s)", journey.destination, journey.destinationName);
                 break;
             case 2: // Print estimated travel time including downtime.
-                printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                if (journey.travelTime + journey.downtime >= 60) {
+                    printf("Est. travel time:\t%d hour(s) and %d minutes", (journey.travelTime + journey.downtime) / 60, (journey.travelTime + journey.downtime) % 60);
+                } else {
+                    printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                }
                 break;
             case 3: // Print price.
-                // TODO: Vis tid i timer og minutter.
                 printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
                 break;
             case 4: // Print emission.
                 printf("Emission:\t\t%d kg CO2e per passenger", journey.emission);
                 break;
             default: // Error if unknown case.
-                printf("Unknown 'print_journey' case!");
+                print_error("Unknown 'print_journey' case!");
                 exit(EXIT_FAILURE);
         }
 
@@ -189,6 +183,31 @@ void print_journey(const route_s journey) {
 
     // Move cursor to the first column and print bottom of box.
     printf("\033[0G");
+    print_bottom_of_box();
+}
+
+void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) {
+    // Print top of box with title.
+    print_top_of_box("Alternative journeys", wc_light_blue);
+
+    // Print table "categories".
+    print_middle_of_box();
+    set_win_color(wc_bright_white);
+    printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
+    printf("Vehicle\tTime\tPrice\t\tEmission\n");
+
+    // Print alternative journeys.
+    for (int i = 0; i < numberOfJourneys; i++) {
+        char journey[BOX_WIDTH];
+        print_middle_of_box();
+        set_win_color(wc_bright_white);
+        printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
+        sprintf(journey, "%s\t%02d:%02d\t%.2lf EUR\t%d kg\n", journeys[i].transportType == 1 ? "Airplane" : "Train   ", (journeys[i].travelTime + journeys[i].downtime) / 60, (journeys[i].travelTime + journeys[i].downtime) % 60, journeys[i].price / 100.00,
+                journeys[i].emission);
+        printf(journey);
+    }
+
+    // Print the bottom of the box.
     print_bottom_of_box();
 }
 
@@ -210,8 +229,7 @@ void get_priorities(int priorities[3]) {
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Gør så man kan gå tilbage i sine prioriteter.
-    // TODO: Skriv kommentarer når det er gjort.
+    // TODO: Gør så man kan gå tilbage i sine prioriteter. Skriv kommentarer.
 
     char c = '\0';
     int n = 0;
@@ -289,19 +307,14 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Problemer med autocomplete efter BSP
-
     while (1) {
         c = w_getchar();
 
         if (i > 0 && c == BSP) {
             // Backspace: delete last char.
             printf("\033[1D \033[1D");
-            input[i] = '\0';
             i--;
-            if (i == 0) {
-                input[0] = '\0';
-            }
+            input[i] = '\0';
         } else if (i > 0 && c == ENTER) {
             // Enter: return input.
             break;
@@ -362,25 +375,36 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
-            // Continue if 0 strings match input
-            if (stringsAmount < 1) {
-                set_win_color(wc_bright_white);
-                continue;
-            }
+            // If a strings match is found
+            if (stringsAmount > 0) {
+                set_win_color(wc_gray);
 
-            // Wrap auto-complete selection var based on amount of strings
-            if (autoCompleteSelection < 0) {
-                autoCompleteSelection = stringsAmount - 1;
+                // Wrap auto-complete selection var based on amount of strings
+                if (autoCompleteSelection < 0) {
+                    autoCompleteSelection = stringsAmount - 1;
+                } else {
+                    autoCompleteSelection %= stringsAmount;
+                }
+
+                // Save selected string
+                autoCompleteString = strings[autoCompleteSelection];
+
+                if (stringsAmount > 0 && strlen(autoCompleteString) > i) {
+                    // Print auto-complete string
+                    printf("%s", autoCompleteString + i);
+
+                    // Clear the rest of the box
+                    for (int j = i; j < BOX_WIDTH - BOX_PADDING * 2 - 2 - 2; ++j) {
+                        putchar(' ');
+                    }
+
+                    // Set cursor at next char
+                    putchar(0x0D);
+                    printf("\033[%dC", i + BOX_PADDING + 1);
+                }
             } else {
-                autoCompleteSelection %= stringsAmount;
-            }
-
-            // Save selected string
-            autoCompleteString = strings[autoCompleteSelection];
-
-            if (stringsAmount > 0 && strlen(autoCompleteString) > i) {
-                // Print auto-complete string
-                printf("%s", autoCompleteString + i);
+                autoCompleteSelection = -1;
+                autoCompleteString = NULL;
 
                 // Clear the rest of the box
                 for (int j = i; j < BOX_WIDTH - BOX_PADDING * 2 - 2 - 2; ++j) {
@@ -409,12 +433,15 @@ void print_top_of_priority_boxes(const char titles[3][10]) {
 
     // Print top of 3 boxes including titles from the array.
     for (int i = 0; i < 3; i++) {
-        printf("%c%c \033[1m", 201, 181);
+        printf("%c", 201);
+        utf8_print(L"╡");
+        printf(" \033[1m");
         set_win_color(wc_light_blue);
         printf(titles[i]);
         printf("\033[0m");
         set_win_color(wc_gray);
-        printf(" %c%c", 198, 187);
+        utf8_print(L" ╞");
+        printf("%c", 187);
     }
     printf("\n");
 }
@@ -447,20 +474,22 @@ void print_bottom_of_priority_boxes(const char titles[3][10]) {
     printf("\n");
 }
 
-void print_top_of_box(const char title[]) {
+void print_top_of_box(const char title[], const winColor_e titleColor) {
     // Print top left corner and set font to bold for title.
     set_win_color(wc_gray);
-    printf("%c%c \033[1m", 201, 181);
+    printf("%c", 201);
+    utf8_print(L"╡");
+    printf(" \033[1m");
 
     // Set text color and print box title.
-    set_win_color(wc_light_blue);
+    set_win_color(titleColor);
     int i = strlen(title);
     printf(title);
 
     // Set text back to non-bold and set color.
     printf("\033[0m");
     set_win_color(wc_gray);
-    printf(" %c", 198);
+    utf8_print(L" ╞");
 
     // Print the rest of the top part.
     while (i < BOX_WIDTH) {
@@ -472,6 +501,15 @@ void print_top_of_box(const char title[]) {
     printf("%c\n", 187);
 }
 
+void print_middle_of_box() {
+    set_win_color(wc_gray);
+    printf("%c", 186);
+    for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
+        printf(" ");
+    }
+    printf("%c\n", 186);
+}
+
 void print_bottom_of_box() {
     set_win_color(wc_gray);
     printf("%c", 200);
@@ -481,22 +519,6 @@ void print_bottom_of_box() {
     printf("%c\n", 188);
 }
 
-void print_left_side_of_box() {
-    set_win_color(wc_gray);
-    printf("%c", 186);
-    for (int k = 0; k < BOX_PADDING; k++) {
-        printf(" ");
-    }
-}
-
-void print_right_side_of_box() {
-    set_win_color(wc_gray);
-    for (int k = 0; k < BOX_PADDING; k++) {
-        printf(" ");
-    }
-    printf("%c\n", 186);
-}
-
 int length_of_longest_word(const char message[]) {
     int lengthOfLongestWord = 0;
     int n = 0;
@@ -504,7 +526,8 @@ int length_of_longest_word(const char message[]) {
     // Look for spaces in message.
     for (int i = 0; i < strlen(message); i++) {
         if (message[i] == ' ') {
-            if (n > lengthOfLongestWord) { // If the distance between to spaces is greater than the previous distance, then update variable.
+            if (n > lengthOfLongestWord) {
+                // If the distance between to spaces is greater than the previous distance, then update variable.
                 lengthOfLongestWord = n;
             }
             n = 0;
@@ -549,7 +572,7 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
 
     // Get the current input mode
     if (!GetConsoleMode(hstdin, &mode)) {
-        perror("Error getting console mode");
+        print_error("Could not getting console mode");
         exit(EXIT_FAILURE);
     }
 
@@ -570,12 +593,15 @@ void set_terminal_mode(const DWORD setValues, const DWORD clearValues) {
 
     // Set the new input mode
     if (!SetConsoleMode(hstdin, newMode)) {
-        perror("Error setting console mode");
+        print_error("Could not setting console mode");
         exit(EXIT_FAILURE);
     }
 }
 
-// todo comments
+/**
+ * Read raw input from windows terminal
+ * @return Char as int value
+ */
 int w_getchar() {
     INPUT_RECORD record;
     DWORD events;
@@ -589,4 +615,115 @@ int w_getchar() {
             }
         }
     }
+}
+
+/**
+ * Prints an error message
+ * @param msg Error message
+ */
+void print_error(const char *msg) {
+    char title[13] = "Error";
+
+    // Reset loading bar
+    loading_bar(0);
+
+    // Create title
+    if (errno != 0) {
+        sprintf(title, "%s: %d", title, errno);
+    }
+
+    // Print error in box
+    print_top_of_box(title, wc_red);
+    print_middle_of_box();
+    printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+
+    set_win_color(wc_light_red);
+
+    if (errno == 0) {
+        printf("%s.\n", msg);
+    } else {
+        perror(msg);
+    }
+
+    set_win_color(wc_default);
+
+    print_bottom_of_box();
+}
+
+/**
+ * Draw loading bar
+ * @param mode 0: clear, 1: draw
+ */
+void loading_bar(const int mode) {
+    static int progress = 2;
+    static int firstPrint = 1;
+    static clock_t lastUpdate = 0;
+    const int size = 8;
+    const clock_t interval = CLOCKS_PER_SEC / 10;
+
+    if (mode == 0 && !firstPrint) {
+        // Reset variables
+        progress = 2;
+        firstPrint = 1;
+
+        // Delet bar
+        printf("\033[1A\033[G");
+        for (int i = 0; i < size + 2; ++i) {
+            putchar(' ');
+        }
+        printf("\033[G");
+    } else if (mode == 1 && clock() >= lastUpdate + interval)  {
+        // Save time of drawing
+        lastUpdate = clock();
+
+        if (firstPrint) {
+            firstPrint = 0;
+        } else {
+            printf("\033[1A\033[G");
+        }
+
+        // Draw loading bar
+        putchar('[');
+        for (int i = 0; i < size; ++i) {
+            if ((progress - i) % size == 0) {
+                set_win_color(wc_bright_white);
+                putchar('#');
+            } else if ((progress - i - 1) % size == 0) {
+                set_win_color(wc_white);
+                putchar('#');
+            } else if ((progress - i - 2) % size == 0) {
+                set_win_color(wc_gray);
+                putchar('#');
+            } else {
+                putchar(' ');
+            }
+
+        }
+        set_win_color(wc_default);
+        putchar(']');
+        putchar('\n');
+
+        progress = (progress+1) % size;
+    }
+}
+
+void utf8_print(const wchar_t* utf8Str) {
+    static int firstRunFlag = 1;
+    static UINT initialCodeSpace;
+
+    // Save initial terminal mode in first run of function
+    if (firstRunFlag) {
+        firstRunFlag = 0;
+        initialCodeSpace = GetConsoleOutputCP();
+    }
+
+    // Force utf-8 mode
+    SetConsoleOutputCP(CP_UTF8);
+    _setmode(_fileno(stdout), _O_U8TEXT);
+
+    // Print string
+    wprintf(utf8Str);
+
+    SetConsoleOutputCP(initialCodeSpace);
+    _setmode(_fileno(stdout), _O_TEXT);
 }

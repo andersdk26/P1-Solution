@@ -51,7 +51,9 @@ void set_win_color(winColor_e color);
 winColor_e merge_win_color(winColor_e color, winColor_e highlighter);
 void cls(void);
 void delay(clock_t millis);
-void print_warning(const char *msg);
-void check_input(const char *input);
-void* memory_allocation(void *p, size_t size, int clear);
+void print_warning(const char* msg);
+void check_input(const char* input);
+void* memory_allocation(void* p, size_t size, int clear);
+int strtol_check(const char* start, int base, int* errorFlag);
+double strtod_check(const char* start, int* errorFlag);
 #endif //GENERAL_H

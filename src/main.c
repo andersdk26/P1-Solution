@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include "main.h"
+
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"
-#include "journey.h"
 
 int main(void) {
     while (1) {
@@ -16,7 +19,7 @@ int main(void) {
         get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
         get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
         // get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
-        qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
+        sort_routes(routes, routeQuantity);
 
         // Print start location instructions.
         box_print(instructionsStart, "Journey");
@@ -47,21 +50,25 @@ int main(void) {
             int priorities[] = {-1, -1, -1};
             get_priorities(priorities);
 
+            // Sort trips based on priorities.
             sort_trips(routes, routeQuantity, priorities);
 
-            //print_routes(routes, routeQuantity);
+            // Print the best journey.
+            print_best_journey(routes[0]);
 
-            // TODO: Print tabel over alternative rejser.
-
-            print_journey(routes[0]);
+            // Print alternative journeys if any exist.
+            if (routeQuantity - 1 > 0) {
+                print_alternative_journeys(routes + 1, routeQuantity - 1);
+            }
         }
 
+        delay(1000);
         set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                           ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
-        delay(3000);
         box_print(endMessage, "End");
+        fflush(stdin);
         char exit = '\0';
-        while (exit == '\0') {
+        while (!isgraph(exit)) {
             scanf("%c", &exit);
         }
         if (tolower(exit) == 'q') {
