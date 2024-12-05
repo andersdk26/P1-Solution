@@ -672,7 +672,7 @@ void loading_bar(const int mode) {
             putchar(' ');
         }
         printf("\033[G");
-    } else if (clock() >= lastUpdate + interval)  {
+    } else if (mode == 1 && clock() >= lastUpdate + interval)  {
         // Save time of drawing
         lastUpdate = clock();
 

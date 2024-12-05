@@ -154,6 +154,7 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     }
 
     fclose(file);
+    loading_bar(0);
 }
 
 /**
@@ -244,6 +245,9 @@ void search_second_column(const char *origin, const char *query, char ***stringL
  */
 void remove_mismatches(const char *origin, const char *destination, route_s **routes, int *routeAmount) {
     for (int i = *routeAmount - 1; i >= 0; i--) {
+        // Update loading bar
+        loading_bar(1);
+
         // Skip routes that match origin and destination
         if (stricmp((*routes)[i].origin, origin) == 0 && stricmp((*routes)[i].destination, destination) == 0) {
             continue;
@@ -251,6 +255,8 @@ void remove_mismatches(const char *origin, const char *destination, route_s **ro
 
         remove_route(routes, routeAmount, i);
     }
+    // Remove loading bar
+    loading_bar(0);
 }
 
 /**
@@ -299,6 +305,9 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
     const route_s *route1 = (route_s *) vp1;
     const route_s *route2 = (route_s *) vp2;
 
+    // Update loading bar
+    loading_bar(1);
+
     // Compare origin
     const int result = stricmp(route1->origin, route2->origin);
     if (result != 0) {
@@ -307,6 +316,13 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
 
     // Compare destination
     return stricmp(route1->destination, route2->destination);
+}
+
+void sort_routes(route_s* routes, const int routeQuantity) {
+    qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
+
+    // Delete loading bar
+    loading_bar(0);
 }
 
 /**
@@ -320,6 +336,9 @@ int compare_trips(void *param, const void *a, const void *b) {
     const route_s *trip_a = (const route_s *) a; // Cast first trip to route_s
     const route_s *trip_b = (const route_s *) b; // Cast second trip to route_s
     const priority_e *priorities = (priority_e *) param; // Cast parameter to priority array
+
+    // Update loading bar
+    loading_bar(1);
 
     // Iterate through the priority list
     for (int i = 0; i < 3; ++i) {
@@ -353,4 +372,7 @@ int compare_trips(void *param, const void *a, const void *b) {
 void sort_trips(route_s *trips, const size_t num_trips, void *priorities) {
     // Sort the trips array using qsort_s with compare_trips as the comparison function
     qsort_s(trips, num_trips, sizeof(route_s), compare_trips, (void *) priorities);
+
+    // Delete loading bar
+    loading_bar(0);
 }
