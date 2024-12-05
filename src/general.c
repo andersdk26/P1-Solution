@@ -5,9 +5,9 @@
  * @param color Color code
  */
 void set_win_color(const winColor_e color) {
+    // Only run for windows OS
 #ifdef _WINDOWS_
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    //static const WORD standardColor = 0x07;
 
     SetConsoleTextAttribute(hConsole, color);
 #endif
@@ -19,7 +19,9 @@ void set_win_color(const winColor_e color) {
  * @param highlighter Highlighter color code
  */
 winColor_e merge_win_color(const winColor_e color, const winColor_e highlighter) {
+    // Mask highlighter
     winColor_e result = highlighter & 0xf0;
+    // Add color
     result |= color;
     return result;
 }
@@ -28,7 +30,7 @@ winColor_e merge_win_color(const winColor_e color, const winColor_e highlighter)
  * Clears screen
  */
 void cls(void) {
-    printf("\n\n\n\n\n\n\n\n\n\n");
+    printf("\n\n\n");
     system("cls");
 }
 
@@ -40,15 +42,10 @@ void delay(const clock_t millis) {
     if (millis == 0) {
         return;
     }
-    const clock_t startTime = clock();
-    while (startTime + millis > clock()) {
-    }
-}
 
-void swap_int(int* p1, int* p2) {
-    *p1 = *p1 ^ *p2;
-    *p2 = *p1 ^ *p2;
-    *p1 = *p1 ^ *p2;
+    const clock_t startTime = clock();
+    // wait until time has passed
+    while (startTime + millis > clock()) {}
 }
 
 /**
@@ -76,13 +73,15 @@ void check_input(const char* input) {
  * @return Memory pointer
  */
 void* memory_allocation(void* p, const size_t size, const int clear) {
+    void* lastP = NULL;
+
     if (size < 1) {
         free(p);
         return NULL;
     }
 
-    void* lastP = NULL;
     if (p == NULL) {
+        // New memory allocation
         if (clear) {
             p = calloc(size, 1);
         }
@@ -91,10 +90,12 @@ void* memory_allocation(void* p, const size_t size, const int clear) {
         }
     }
     else {
-        lastP = p;
+        // Expand memory allocation
+        lastP = p; // Save last memory address to prevent memory leak if expansion fails
         p = realloc(p, size);
     }
 
+    // Check for error
     if (p == NULL) {
         perror("Memory allocation error");
         free(lastP);

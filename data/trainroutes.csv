@@ -1,30 +1,101 @@
 locationA,locationB,stationA,stationB,travelTimeInMinutes,emissionsPerPassenger,price,downtime
-Berlin,Munich,Berlin Hbf,Munich Hbf,240,14,79.90,0
-Frankfurt,Hamburg,Frankfurt Hbf,Hamburg Hbf,210,12,69.90,0
-Cologne,Dusseldorf,Cologne Hbf,Dusseldorf Hbf,30,1.2,19.90,0
-Stuttgart,Leipzig,Stuttgart Hbf,Leipzig Hbf,255,15,59.90,0
-Nuremberg,Bremen,Nuremberg Hbf,Bremen Hbf,330,19,89.90,0
-Berlin,Frankfurt,Berlin Hbf,Frankfurt Hbf,240,13,89.90,0
-Munich,Cologne,Munich Hbf,Cologne Hbf,260,16,99.90,0
-Hamburg,Stuttgart,Hamburg Hbf,Stuttgart Hbf,330,20,99.90,0
-Dortmund,Hannover,Dortmund Hbf,Hannover Hbf,120,7,39.90,0
-Frankfurt,Nuremberg,Frankfurt Hbf,Nuremberg Hbf,120,7,49.90,0
-Munich,Hamburg,Munich Hbf,Hamburg Hbf,380,22,119.90,0
-Leipzig,Berlin,Leipzig Hbf,Berlin Hbf,75,4.5,29.90,0
-Cologne,Hannover,Cologne Hbf,Hannover Hbf,150,9,49.90,0
-Dusseldorf,Bremen,Dusseldorf Hbf,Bremen Hbf,180,11,39.90,0
-Stuttgart,Munich,Stuttgart Hbf,Munich Hbf,135,8,39.90,0
-Berlin,Dresden,Berlin Hbf,Dresden Hbf,120,7,39.90,0
-Frankfurt,Cologne,Frankfurt Hbf,Cologne Hbf,90,5.5,39.90,0
-Hamburg,Berlin,Hamburg Hbf,Berlin Hbf,100,6,49.90,0
-Nuremberg,Leipzig,Nuremberg Hbf,Leipzig Hbf,135,8,39.90,0
-Munich,Frankfurt,Munich Hbf,Frankfurt Hbf,185,11,69.90,0
-Berlin,Cologne,Berlin Hbf,Cologne Hbf,270,16,89.90,0
-Hamburg,Dusseldorf,Hamburg Hbf,Dusseldorf Hbf,190,12,69.90,0
-Stuttgart,Frankfurt,Stuttgart Hbf,Frankfurt Hbf,90,5.5,39.90,0
-Munich,Dresden,Munich Hbf,Dresden Hbf,290,17,99.90,0
-Berlin,Nuremberg,Berlin Hbf,Nuremberg Hbf,210,13,69.90,0
-Leipzig,Hamburg,Leipzig Hbf,Hamburg Hbf,210,13,59.90,0
-Cologne,Berlin,Cologne Hbf,Berlin Hbf,270,16,89.90,0
-Frankfurt,Hannover,Frankfurt Hbf,Hannover Hbf,150,9,49.90,0
-Dresden,Nuremberg,Dresden Hbf,Nuremberg Hbf,210,13,69.90,0
+Paris,London,Gare du Nord,St Pancras,150,15,80,30
+Berlin,Madrid,Hauptbahnhof,Atocha,1260,20,220,60
+Rome,Amsterdam,Termini,Centraal,1440,18,150,90
+Vienna,Zurich,Hauptbahnhof,Hauptbahnhof,540,10,100,20
+Brussels,Stockholm,Bruxelles-Midi,Centralstation,1260,22,180,80
+Dublin,Frankfurt,Heuston,Hauptbahnhof,1980,25,200,90
+Copenhagen,Barcelona,København H,Sants,1440,20,210,100
+Lisbon,Oslo,Oriente,Sentralstasjon,2760,30,300,150
+Athens,Paris,Larissa,Gare de Lyon,3120,35,280,180
+Prague,Milan,Hlavní nádraží,Milano Centrale,780,12,120,40
+London,Madrid,St Pancras,Atocha,1440,22,250,90
+Amsterdam,Berlin,Centraal,Hauptbahnhof,390,8,70,15
+Vienna,Paris,Hauptbahnhof,Gare de Lyon,900,15,150,45
+Rome,Lisbon,Termini,Oriente,2160,28,200,150
+Madrid,Stockholm,Atocha,Centralstation,2520,32,250,200
+Athens,Zurich,Larissa,Hauptbahnhof,2280,28,240,140
+Brussels,Milan,Bruxelles-Midi,Milano Centrale,780,12,130,40
+Berlin,Dublin,Hauptbahnhof,Heuston,2340,30,250,160
+Copenhagen,Vienna,København H,Hauptbahnhof,900,15,100,30
+Oslo,Amsterdam,Sentralstasjon,Centraal,1080,20,120,50
+Paris,Barcelona,Gare de Lyon,Sants,390,8,110,20
+London,Rome,St Pancras,Termini,1440,22,180,90
+Berlin,Paris,Hauptbahnhof,Gare de l'Est,540,12,120,30
+Amsterdam,London,Centraal,St Pancras,270,10,110,15
+Vienna,Stockholm,Hauptbahnhof,Centralstation,1260,18,200,80
+Madrid,Dublin,Atocha,Heuston,2880,30,280,190
+Athens,Berlin,Larissa,Hauptbahnhof,2340,28,260,140
+Lisbon,Brussels,Oriente,Bruxelles-Midi,1800,25,200,100
+Copenhagen,Frankfurt,København H,Hauptbahnhof,780,10,90,30
+Oslo,London,Sentralstasjon,St Pancras,1800,30,240,100
+Dublin,Amsterdam,Heuston,Centraal,2340,30,230,160
+Rome,Stockholm,Termini,Centralstation,2160,28,250,150
+Paris,Milan,Gare de Lyon,Milano Centrale,480,10,120,20
+Berlin,Zurich,Hauptbahnhof,Hauptbahnhof,780,12,100,30
+Vienna,Madrid,Hauptbahnhof,Atocha,2160,28,220,150
+Barcelona,Amsterdam,Sants,Centraal,1260,18,180,80
+Athens,Brussels,Larissa,Bruxelles-Midi,2700,32,240,150
+London,Prague,St Pancras,Hlavní nádraží,1080,15,140,50
+Copenhagen,Milan,København H,Milano Centrale,1440,20,190,90
+Lisbon,Paris,Oriente,Gare de Lyon,1560,25,200,120
+Stockholm,Dublin,Centralstation,Heuston,3240,35,320,200
+Madrid,Vienna,Atocha,Hauptbahnhof,2160,28,220,150
+Zurich,Barcelona,Hauptbahnhof,Sants,780,15,110,40
+Amsterdam,Oslo,Centraal,Sentralstasjon,1260,18,140,70
+London,Frankfurt,St Pancras,Hauptbahnhof,480,10,100,20
+Rome,Dublin,Termini,Heuston,2520,32,260,160
+Berlin,Barcelona,Hauptbahnhof,Sants,1440,20,210,90
+Paris,Zurich,Gare de Lyon,Hauptbahnhof,270,8,80,15
+Vienna,Athens,Hauptbahnhof,Larissa,2520,30,250,150
+Milan,Brussels,Milano Centrale,Bruxelles-Midi,780,12,130,40
+Copenhagen,Lisbon,København H,Oriente,2880,30,280,150
+Oslo,Madrid,Sentralstasjon,Atocha,3240,35,300,180
+Dublin,Stockholm,Heuston,Centralstation,3240,35,320,200
+Rome,Amsterdam,Termini,Centraal,1440,18,150,90
+Barcelona,Frankfurt,Sants,Hauptbahnhof,780,12,110,40
+Paris,Oslo,Gare de Lyon,Sentralstasjon,1260,20,200,70
+London,Stockholm,St Pancras,Centralstation,1800,25,240,100
+Berlin,Prague,Hauptbahnhof,Hlavní nádraží,240,5,50,10
+Vienna,Amsterdam,Hauptbahnhof,Centraal,900,15,140,30
+Lisbon,Zurich,Oriente,Hauptbahnhof,2880,30,280,150
+Milan,Athens,Milano Centrale,Larissa,2340,28,260,140
+Brussels,Barcelona,Bruxelles-Midi,Sants,1260,18,180,80
+Paris,Berlin,Gare de l'Est,Hauptbahnhof,540,12,120,30
+London,Lisbon,St Pancras,Oriente,1980,28,240,120
+Rome,Frankfurt,Termini,Hauptbahnhof,780,12,120,40
+Madrid,Paris,Atocha,Gare de Lyon,780,12,120,40
+Oslo,Copenhagen,Sentralstasjon,København H,480,8,60,20
+Amsterdam,Vienna,Centraal,Hauptbahnhof,900,15,140,30
+Dublin,Rome,Heuston,Termini,2520,32,260,160
+Stockholm,Madrid,Centralstation,Atocha,3240,35,320,180
+Berlin,Milan,Hauptbahnhof,Milano Centrale,780,12,130,40
+Prague,Barcelona,Hlavní nádraží,Sants,1440,18,200,90
+Zurich,Dublin,Hauptbahnhof,Heuston,2520,30,280,150
+Copenhagen,Oslo,København H,Sentralstasjon,480,8,60,20
+London,Paris,St Pancras,Gare du Nord,150,15,80,20
+Vienna,Lisbon,Hauptbahnhof,Oriente,2880,30,280,150
+Amsterdam,Prague,Centraal,Hlavní nádraží,540,10,90,20
+Milan,Stockholm,Milano Centrale,Centralstation,1800,25,240,100
+Athens,Madrid,Larissa,Atocha,3240,35,300,180
+Lisbon,Barcelona,Oriente,Sants,1080,18,140,70
+Brussels,Oslo,Bruxelles-Midi,Sentralstasjon,1440,20,210,100
+Frankfurt,Amsterdam,Hauptbahnhof,Centraal,270,8,60,15
+Dublin,Brussels,Heuston,Bruxelles-Midi,1980,28,230,120
+Rome,Zurich,Termini,Hauptbahnhof,780,12,130,40
+Madrid,London,Atocha,St Pancras,1440,22,250,90
+Paris,Stockholm,Gare de Lyon,Centralstation,1260,20,220,80
+Berlin,Lisbon,Hauptbahnhof,Oriente,1800,25,280,120
+Vienna,Milan,Hauptbahnhof,Milano Centrale,480,10,110,20
+Oslo,Zurich,Sentralstasjon,Hauptbahnhof,1260,18,150,70
+Copenhagen,Paris,København H,Gare de Lyon,1080,15,200,50
+Barcelona,Athens,Sants,Larissa,2700,32,280,150
+Amsterdam,London,Centraal,St Pancras,270,10,110,15
+Lisbon,Frankfurt,Oriente,Hauptbahnhof,1800,25,200,120
+Prague,Dublin,Hlavní nádraží,Heuston,2520,32,280,160
+Madrid,Paris,Chamartín,Gare de Lyon,670,9,120,45
+Berlin,Vienna,Hauptbahnhof,Hauptbahnhof,460,5,90,30
+Athens,Oslo,Central,Central,2220,15,250,120
+Zurich,Stockholm,HB,Central,1250,8,190,90
+Copenhagen,Barcelona,Central,Sants,1890,11,240,120
+London,Rome,St Pancras,Termini,1440,13,210,100

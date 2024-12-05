@@ -4,6 +4,12 @@
 #include <stdio.h>
 
 typedef enum {
+    p_time,
+    p_price,
+    p_emission
+} priority_e;
+
+typedef enum {
     tt_none,
     tt_plane,
     tt_train
@@ -15,8 +21,8 @@ typedef struct {
     char *originName;
     char *destinationName;
     int travelTime; // min
-    int emission; // g per passenger
-    int price; // kr in 1/100
+    int emission; // kg per passenger
+    int price; // euro in 1/100
     int downtime; // min
     transportType_e transportType;
 } route_s;

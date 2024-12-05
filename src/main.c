@@ -8,47 +8,69 @@
 #include "journey.h"
 
 int main(void) {
-    route_s* routes = NULL;
-    int routeQuantity = 0;
+    while (1) {
+        route_s *routes = NULL;
+        int routeQuantity = 0;
 
-    // Load routes from files
-    get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
-    get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
-    qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
-    print_routes(routes, routeQuantity);
+        // Load routes from files and sort alphabetically
+        get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
+        get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
+        // get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
+        qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
-    // Print journey instructions.
-    box_print(journeyInstructions, "Journey");
+        // Print start location instructions.
+        box_print(instructionsStart, "Journey");
 
-    // Get start location.
-    char* inputStart = box_read("Start", routes, routeQuantity, sic_first, "");
+        // Get start location.
+        char *inputStart = box_read("Start", routes, routeQuantity, sic_first, "");
 
-    // Get destination.
-    char* inputDestination = box_read("Destination", routes, routeQuantity, sic_second, inputStart);
+        // Print destination instructions.
+        box_print(instructionsDestination, "Journey");
 
-    // Remove routes that does not match location and destination
-    remove_mismatches(inputStart, inputDestination, &routes, &routeQuantity);
+        // Get destination.
+        char *inputDestination = box_read("Destination", routes, routeQuantity, sic_second, inputStart);
 
-    // Free allocated memory.
-    free(inputStart);
-    free(inputDestination);
+        // Remove routes that does not match location and destination
+        remove_mismatches(inputStart, inputDestination, &routes, &routeQuantity);
 
-    // Print prioritisation instructions.
-    box_print(prioritisationInstructions, "Prioritisation");
+        // Free allocated memory.
+        free(inputStart);
+        free(inputDestination);
 
-    // Get user priorities.
-    int priorities[] = {0, 0, 0};
-    get_priorities(priorities);
+        if (routeQuantity < 1) {
+            box_print(noJourney, "Uh oh");
+        } else {
+            // Print prioritisation instructions.
+            box_print(prioritisationInstructions, "Prioritisation");
 
-    sort_trips(routes, routeQuantity, priorities);
-    
-    print_routes(routes, routeQuantity);
+            // Get user priorities.
+            int priorities[] = {-1, -1, -1};
+            get_priorities(priorities);
 
-    printf("Press any key to exit...");
-    char exit = '\0';
-    while (exit == '\0') {
-        scanf("%c", &exit);
+            sort_trips(routes, routeQuantity, priorities);
+
+            //print_routes(routes, routeQuantity);
+
+            // TODO: Print tabel over alternative rejser.
+
+            print_journey(routes[0]);
+        }
+
+        set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+                          ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
+        delay(3000);
+        box_print(endMessage, "End");
+        char exit = '\0';
+        while (exit == '\0') {
+            scanf("%c", &exit);
+        }
+        if (tolower(exit) == 'q') {
+            break;
+        }
+        system("cls");
+        set_terminal_mode(0, 0);
     }
+    set_terminal_mode(0, 0);
 
     return EXIT_SUCCESS;
 }

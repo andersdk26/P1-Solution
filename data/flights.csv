@@ -1,30 +1,101 @@
 locationA,locationB,airportA,airportB,travelTimeInMinutes,emissionsPerPassenger,price,downtime
-Berlin,Frankfurt,Berlin BER,Frankfurt FRA,70,100,120.00,120
-Munich,Hamburg,Munich MUC,Hamburg HAM,80,110,140.00,120
-Dusseldorf,Berlin,Dusseldorf DUS,Berlin BER,75,105,100.00,90
-Cologne,Munich,Cologne CGN,Munich MUC,85,115,130.00,90
-Frankfurt,Hamburg,Frankfurt FRA,Hamburg HAM,65,95,110.00,120
-Stuttgart,Berlin,Stuttgart STR,Berlin BER,80,110,120.00,90
-Munich,Frankfurt,Munich MUC,Frankfurt FRA,55,80,90.00,120
-Dortmund,Hamburg,Dortmund DTM,Hamburg HAM,70,100,115.00,90
-Berlin,Stuttgart,Berlin BER,Stuttgart STR,80,110,125.00,120
-Munich,Dusseldorf,Munich MUC,Dusseldorf DUS,70,100,105.00,120
-Frankfurt,Bremen,Frankfurt FRA,Bremen BRE,60,85,95.00,90
-Berlin,Nuremberg,Berlin BER,Nuremberg NUE,75,105,120.00,120
-Hamburg,Cologne,Hamburg HAM,Cologne CGN,75,105,110.00,90
-Frankfurt,Leipzig,Frankfurt FRA,Leipzig LEJ,70,100,100.00,90
-Dusseldorf,Stuttgart,Dusseldorf DUS,Stuttgart STR,65,95,95.00,120
-Berlin,Leipzig,Berlin BER,Leipzig LEJ,50,75,85.00,90
-Cologne,Dortmund,Cologne CGN,Dortmund DTM,60,85,90.00,90
-Munich,Bremen,Munich MUC,Bremen BRE,75,105,115.00,120
-Berlin,Hamburg,Berlin BER,Hamburg HAM,65,95,100.00,90
-Frankfurt,Stuttgart,Frankfurt FRA,Stuttgart STR,55,80,90.00,120
-Munich,Leipzig,Munich MUC,Leipzig LEJ,70,100,110.00,120
-Dusseldorf,Bremen,Dusseldorf DUS,Bremen BRE,65,95,95.00,90
-Berlin,Dortmund,Berlin BER,Dortmund DTM,70,100,105.00,90
-Hamburg,Nuremberg,Hamburg HAM,Nuremberg NUE,80,110,120.00,120
-Frankfurt,Dusseldorf,Frankfurt FRA,Dusseldorf DUS,50,75,80.00,90
-Munich,Hannover,Munich MUC,Hannover HAJ,70,100,110.00,120
-Berlin,Hannover,Berlin BER,Hannover HAJ,65,95,105.00,120
-Cologne,Nuremberg,Cologne CGN,Nuremberg NUE,70,100,110.00,120
-Frankfurt,Hannover,Frankfurt FRA,Hannover HAJ,55,80,90.00,90
+Paris,London,CDG,LHR,70,95,100,45
+Berlin,Madrid,BER,MAD,165,160,150,50
+Rome,Amsterdam,FCO,AMS,135,125,140,55
+Vienna,Zurich,VIE,ZRH,80,85,90,30
+Brussels,Stockholm,BRU,ARN,135,155,170,60
+Dublin,Frankfurt,DUB,FRA,120,130,130,50
+Copenhagen,Barcelona,CPH,BCN,150,175,180,70
+Lisbon,Oslo,LIS,OSL,195,200,200,80
+Athens,Paris,ATH,CDG,185,170,180,90
+Prague,Milan,PRG,MXP,105,120,110,45
+London,Madrid,LHR,MAD,145,150,160,60
+Amsterdam,Berlin,AMS,BER,85,95,100,40
+Vienna,Paris,VIE,CDG,135,145,140,60
+Rome,Lisbon,FCO,LIS,180,180,170,75
+Madrid,Stockholm,MAD,ARN,210,190,200,100
+Athens,Zurich,ATH,ZRH,170,165,180,80
+Brussels,Milan,BRU,MXP,95,110,100,40
+Berlin,Dublin,BER,DUB,135,140,150,65
+Copenhagen,Vienna,CPH,VIE,110,120,140,50
+Oslo,Amsterdam,OSL,AMS,130,130,150,60
+Paris,Barcelona,CDG,BCN,90,100,110,35
+London,Rome,LHR,FCO,150,160,170,65
+Berlin,Paris,BER,CDG,105,120,130,50
+Amsterdam,London,AMS,LHR,80,90,110,35
+Vienna,Stockholm,VIE,ARN,140,160,150,70
+Madrid,Dublin,MAD,DUB,170,190,160,80
+Athens,Berlin,ATH,BER,170,180,190,85
+Lisbon,Brussels,LIS,BRU,140,150,150,60
+Copenhagen,Frankfurt,CPH,FRA,95,100,120,45
+Oslo,London,OSL,LHR,130,150,170,60
+Dublin,Amsterdam,DUB,AMS,115,125,140,50
+Rome,Stockholm,FCO,ARN,165,170,180,85
+Paris,Milan,CDG,MXP,85,95,120,40
+Berlin,Zurich,BER,ZRH,95,110,130,40
+Vienna,Madrid,VIE,MAD,185,190,170,75
+Barcelona,Amsterdam,BCN,AMS,145,160,160,70
+Athens,Brussels,ATH,BRU,180,185,170,80
+London,Prague,LHR,PRG,105,125,140,50
+Copenhagen,Milan,CPH,MXP,145,155,160,65
+Lisbon,Paris,LIS,CDG,155,160,150,70
+Stockholm,Dublin,ARN,DUB,170,190,160,80
+Madrid,Vienna,MAD,VIE,185,190,170,75
+Zurich,Barcelona,ZRH,BCN,105,125,140,50
+Amsterdam,Oslo,AMS,OSL,125,135,140,55
+London,Frankfurt,LHR,FRA,95,100,110,40
+Rome,Dublin,FCO,DUB,165,175,150,70
+Berlin,Barcelona,BER,BCN,150,160,170,65
+Paris,Zurich,CDG,ZRH,70,90,100,35
+Vienna,Athens,VIE,ATH,170,180,170,75
+Milan,Brussels,MXP,BRU,95,110,110,40
+Copenhagen,Lisbon,CPH,LIS,195,200,190,85
+Oslo,Madrid,OSL,MAD,170,190,180,75
+Dublin,Stockholm,DUB,ARN,170,190,160,80
+Rome,Amsterdam,FCO,AMS,135,125,140,55
+Barcelona,Frankfurt,BCN,FRA,105,130,140,50
+Paris,Oslo,CDG,OSL,130,145,150,60
+London,Stockholm,LHR,ARN,140,155,170,65
+Berlin,Prague,BER,PRG,70,80,90,25
+Vienna,Amsterdam,VIE,AMS,120,130,140,50
+Lisbon,Zurich,LIS,ZRH,195,200,190,85
+Milan,Athens,MXP,ATH,170,180,170,75
+Brussels,Barcelona,BRU,BCN,105,130,140,50
+Paris,Berlin,CDG,BER,110,120,130,50
+London,Lisbon,LHR,LIS,165,180,190,85
+Rome,Frankfurt,FCO,FRA,120,140,150,65
+Madrid,Paris,MAD,CDG,120,130,150,55
+Oslo,Copenhagen,OSL,CPH,80,90,100,40
+Amsterdam,Vienna,AMS,VIE,125,130,140,55
+Dublin,Rome,DUB,FCO,165,175,170,80
+Stockholm,Madrid,ARN,MAD,210,190,200,95
+Berlin,Milan,BER,MXP,95,115,120,50
+Prague,Barcelona,PRG,BCN,150,165,160,70
+Zurich,Dublin,ZRH,DUB,145,155,160,65
+Copenhagen,Oslo,CPH,OSL,85,95,100,40
+London,Paris,LHR,CDG,70,85,100,30
+Vienna,Lisbon,VIE,LIS,195,205,200,90
+Amsterdam,Prague,AMS,PRG,85,95,100,40
+Milan,Stockholm,MXP,ARN,140,155,160,65
+Athens,Madrid,ATH,MAD,185,195,180,85
+Lisbon,Barcelona,LIS,BCN,120,135,140,50
+Brussels,Oslo,BRU,OSL,130,150,160,60
+Frankfurt,Amsterdam,FRA,AMS,75,85,90,35
+Dublin,Brussels,DUB,BRU,105,120,130,50
+Rome,Zurich,FCO,ZRH,100,110,120,45
+Madrid,London,MAD,LHR,140,155,170,65
+Paris,Stockholm,CDG,ARN,140,165,180,70
+Berlin,Lisbon,BER,LIS,175,190,180,85
+Vienna,Milan,VIE,MXP,105,115,120,45
+Oslo,Zurich,OSL,ZRH,125,140,150,55
+Copenhagen,Paris,CPH,CDG,110,125,130,50
+Barcelona,Athens,BCN,ATH,180,200,190,90
+Amsterdam,London,AMS,LHR,80,90,100,35
+Lisbon,Frankfurt,LIS,FRA,140,160,170,70
+Prague,Dublin,PRG,DUB,155,165,160,75
+Madrid,Paris,MAD,CDG,120,130,140,55
+Berlin,Vienna,BER,VIE,75,85,100,35
+Athens,Oslo,ATH,OSL,190,200,190,85
+Zurich,Stockholm,ZRH,ARN,150,170,160,75
+Copenhagen,Barcelona,CPH,BCN,150,170,160,70
+London,Rome,LHR,FCO,150,160,170,65
