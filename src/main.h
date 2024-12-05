@@ -2,7 +2,7 @@
 #define MAIN_H
 
 static const char TRAIN_ROUTES_CSV_PATH[] = "../data/trainroutes.csv";
-static const char FLIGHT_CSV_PATH[] = "../data/flightss.csv";
+static const char FLIGHT_CSV_PATH[] = "../data/flights.csv";
 
 const static char instructionsStart[] = "Please enter your starting location. If your location exists in the database, you can press TAB to autocomplete your entry.";
 const static char instructionsDestination[] = "Please enter your destination. If your destination does not appear as an autocomplete suggestion, then a journey between your two locations does not exist. If your journey does exist in the database, you can press TAB to autocomplete your entry.";
