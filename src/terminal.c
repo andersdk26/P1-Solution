@@ -349,6 +349,8 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 default:
                     continue;
             }
+            // Ignore the rest
+            fflush(stdin);
         }
 
         // If length of message is less than the width of the box and the user has entered a letter, print letter and update input.
