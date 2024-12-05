@@ -36,7 +36,6 @@ FILE *open_file(const char *fileName, const char *mode) {
     // Check for errors
     if (file == NULL) {
         print_error("Could not open file");
-        return NULL;
     }
 
     return file;
@@ -127,6 +126,9 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
 
     // Read all lines one by one
     while (fgets(line, lineLength, file) != NULL) {
+        // Draw loading bar
+        loading_bar(1);
+
         // Split line in substrings
         char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
             travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
@@ -152,6 +154,7 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
     }
 
     fclose(file);
+    loading_bar(0);
 }
 
 /**

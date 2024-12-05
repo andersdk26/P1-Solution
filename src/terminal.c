@@ -1,8 +1,12 @@
 #include "terminal.h"
 
+#include <fcntl.h>
+#include <io.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
+
 
 #include "general.h"
 
@@ -298,19 +302,14 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Problemer med autocomplete efter BSP
-
     while (1) {
         c = w_getchar();
 
         if (i > 0 && c == BSP) {
             // Backspace: delete last char.
             printf("\033[1D \033[1D");
-            input[i] = '\0';
             i--;
-            if (i == 0) {
-                input[0] = '\0';
-            }
+            input[i] = '\0';
         } else if (i > 0 && c == ENTER) {
             // Enter: return input.
             break;
@@ -371,25 +370,36 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
                 search_first_column(input, &strings, &stringsAmount, routes, routeQuantity);
             }
 
-            // Continue if 0 strings match input
-            if (stringsAmount < 1) {
-                set_win_color(wc_bright_white);
-                continue;
-            }
+            // If a strings match is found
+            if (stringsAmount > 0) {
+                set_win_color(wc_gray);
 
-            // Wrap auto-complete selection var based on amount of strings
-            if (autoCompleteSelection < 0) {
-                autoCompleteSelection = stringsAmount - 1;
+                // Wrap auto-complete selection var based on amount of strings
+                if (autoCompleteSelection < 0) {
+                    autoCompleteSelection = stringsAmount - 1;
+                } else {
+                    autoCompleteSelection %= stringsAmount;
+                }
+
+                // Save selected string
+                autoCompleteString = strings[autoCompleteSelection];
+
+                if (stringsAmount > 0 && strlen(autoCompleteString) > i) {
+                    // Print auto-complete string
+                    printf("%s", autoCompleteString + i);
+
+                    // Clear the rest of the box
+                    for (int j = i; j < BOX_WIDTH - BOX_PADDING * 2 - 2 - 2; ++j) {
+                        putchar(' ');
+                    }
+
+                    // Set cursor at next char
+                    putchar(0x0D);
+                    printf("\033[%dC", i + BOX_PADDING + 1);
+                }
             } else {
-                autoCompleteSelection %= stringsAmount;
-            }
-
-            // Save selected string
-            autoCompleteString = strings[autoCompleteSelection];
-
-            if (stringsAmount > 0 && strlen(autoCompleteString) > i) {
-                // Print auto-complete string
-                printf("%s", autoCompleteString + i);
+                autoCompleteSelection = -1;
+                autoCompleteString = NULL;
 
                 // Clear the rest of the box
                 for (int j = i; j < BOX_WIDTH - BOX_PADDING * 2 - 2 - 2; ++j) {
@@ -418,12 +428,15 @@ void print_top_of_priority_boxes(const char titles[3][10]) {
 
     // Print top of 3 boxes including titles from the array.
     for (int i = 0; i < 3; i++) {
-        printf("%c%c \033[1m", 201, 181);
+        printf("%c", 201);
+        utf8_print(L"╡");
+        printf(" \033[1m");
         set_win_color(wc_light_blue);
         printf(titles[i]);
         printf("\033[0m");
         set_win_color(wc_gray);
-        printf(" %c%c", 198, 187);
+        utf8_print(L" ╞");
+        printf("%c", 187);
     }
     printf("\n");
 }
@@ -459,7 +472,9 @@ void print_bottom_of_priority_boxes(const char titles[3][10]) {
 void print_top_of_box(const char title[], const winColor_e titleColor) {
     // Print top left corner and set font to bold for title.
     set_win_color(wc_gray);
-    printf("%c%c \033[1m", 201, 181);
+    printf("%c", 201);
+    utf8_print(L"╡");
+    printf(" \033[1m");
 
     // Set text color and print box title.
     set_win_color(titleColor);
@@ -469,7 +484,7 @@ void print_top_of_box(const char title[], const winColor_e titleColor) {
     // Set text back to non-bold and set color.
     printf("\033[0m");
     set_win_color(wc_gray);
-    printf(" %c", 198);
+    utf8_print(L" ╞");
 
     // Print the rest of the top part.
     while (i < BOX_WIDTH) {
@@ -598,16 +613,21 @@ int w_getchar() {
 }
 
 /**
- * Prints a error message
+ * Prints an error message
  * @param msg Error message
  */
 void print_error(const char *msg) {
-    char title[12] = "Error";
+    char title[13] = "Error";
 
+    // Reset loading bar
+    loading_bar(0);
+
+    // Create title
     if (errno != 0) {
-        sprintf(title, "%s %d", title, errno);
+        sprintf(title, "%s: %d", title, errno);
     }
 
+    // Print error in box
     print_top_of_box(title, wc_red);
     print_middle_of_box();
     printf("\033[1A\033[%dG", 1 + BOX_PADDING);
@@ -625,3 +645,80 @@ void print_error(const char *msg) {
     print_bottom_of_box();
 }
 
+/**
+ * Draw loading bar
+ * @param mode 0: clear, 1: draw
+ */
+void loading_bar(const int mode) {
+    static int progress = 2;
+    static int firstPrint = 1;
+    static clock_t lastUpdate = 0;
+    const int size = 8;
+    const clock_t interval = CLOCKS_PER_SEC / 10;
+
+    if (mode == 0 && !firstPrint) {
+        // Reset variables
+        progress = 2;
+        firstPrint = 1;
+
+        // Delet bar
+        printf("\033[1A\033[G");
+        for (int i = 0; i < size + 2; ++i) {
+            putchar(' ');
+        }
+        printf("\033[G");
+    } else if (clock() >= lastUpdate + interval)  {
+        // Save time of drawing
+        lastUpdate = clock();
+
+        if (firstPrint) {
+            firstPrint = 0;
+        } else {
+            printf("\033[1A\033[G");
+        }
+
+        // Draw loading bar
+        putchar('[');
+        for (int i = 0; i < size; ++i) {
+            if ((progress - i) % size == 0) {
+                set_win_color(wc_bright_white);
+                putchar('#');
+            } else if ((progress - i - 1) % size == 0) {
+                set_win_color(wc_white);
+                putchar('#');
+            } else if ((progress - i - 2) % size == 0) {
+                set_win_color(wc_gray);
+                putchar('#');
+            } else {
+                putchar(' ');
+            }
+
+        }
+        set_win_color(wc_default);
+        putchar(']');
+        putchar('\n');
+
+        progress = (progress+1) % size;
+    }
+}
+
+void utf8_print(const wchar_t* utf8Str) {
+    static int firstRunFlag = 1;
+    static UINT initialCodeSpace;
+
+    // Save initial terminal mode in first run of function
+    if (firstRunFlag) {
+        firstRunFlag = 0;
+        initialCodeSpace = GetConsoleOutputCP();
+    }
+
+    // Force utf-8 mode
+    SetConsoleOutputCP(CP_UTF8);
+    _setmode(_fileno(stdout), _O_U8TEXT);
+
+    // Print string
+    wprintf(utf8Str);
+
+    SetConsoleOutputCP(initialCodeSpace);
+    _setmode(_fileno(stdout), _O_TEXT);
+}

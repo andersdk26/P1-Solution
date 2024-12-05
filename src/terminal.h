@@ -62,4 +62,8 @@ int w_getchar();
 
 void print_error(const char *msg);
 
+void loading_bar(int mode);
+
+void utf8_print(const wchar_t* utf8Str);
+
 #endif //TERMINAL_H

@@ -69,6 +69,7 @@ void print_warning(const char* msg) {
 void* memory_allocation(void* p, const size_t size, const int clear) {
     void* lastP = NULL;
 
+    // Free if size < 1
     if (size < 1) {
         free(p);
         return NULL;
@@ -142,7 +143,7 @@ double strtod_check(const char *start, int *errorFlag) {
     char *end;
     errno = 0; // Reset error
 
-    // Parse int
+    // Parse double
     const double result = strtod(start, &end);
 
     // Catch error

@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include "main.h"
+
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"
@@ -14,7 +18,7 @@ int main(void) {
         // Load routes from files and sort alphabetically
         get_all_routes(TRAIN_ROUTES_CSV_PATH, tt_train, &routes, &routeQuantity);
         get_all_routes(FLIGHT_CSV_PATH, tt_plane, &routes, &routeQuantity);
-        //get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
+        get_all_routes("../data/test.csv", tt_plane, &routes, &routeQuantity);
         qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
         // Print start location instructions.
@@ -56,12 +60,13 @@ int main(void) {
             print_alternative_journeys(routes + 1, routeQuantity - 1);
         }
 
+        delay(1000);
         set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                           ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
-        delay(1000);
         box_print(endMessage, "End");
+        fflush(stdin);
         char exit = '\0';
-        while (exit == '\0') {
+        while (!isgraph(exit)) {
             scanf("%c", &exit);
         }
         if (tolower(exit) == 'q') {
