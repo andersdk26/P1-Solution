@@ -20,7 +20,9 @@ typedef enum {
 
 void box_print(const char originalMessage[], const char title[]);
 
-void print_journey(route_s journey);
+void print_best_journey(route_s journey);
+
+void print_alternative_journeys(route_s journeys[], int numberOfJourneys);
 
 char *box_read(const char title[], const route_s *routes, int routeQuantity, searchInColumn_e searchColumn,
                const char *firstColumn);
@@ -44,11 +46,9 @@ void print_bottom_of_priority_boxes(const char titles[3][10]);
 
 void print_top_of_box(const char title[]);
 
+void print_middle_of_box();
+
 void print_bottom_of_box();
-
-void print_left_side_of_box();
-
-void print_right_side_of_box();
 
 int length_of_longest_word(const char message[]);
 

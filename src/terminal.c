@@ -65,11 +65,7 @@ void box_print(const char originalMessage[], const char title[]) {
     while (n < messageLength) {
         // While the end of the message has not been reached.
         // Print a middle slice of the box.
-        print_left_side_of_box();
-        for (int i = 0; i < BOX_WIDTH; i++) {
-            printf(" ");
-        }
-        print_right_side_of_box();
+        print_middle_of_box();
 
         // Change text color and move to the start of the slice.
         set_win_color(wc_bright_white);
@@ -107,11 +103,7 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     print_top_of_box(title);
 
     // Print the left and right side of the box with spaces in between.
-    printf("%c", 186);
-    for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
-        printf(" ");
-    }
-    printf("%c\n", 186);
+    print_middle_of_box();
 
     // Print the bottom of the box.
     print_bottom_of_box();
@@ -134,7 +126,7 @@ char *box_read(const char title[], const route_s *routes, const int routeQuantit
     return input;
 }
 
-void print_journey(const route_s journey) {
+void print_best_journey(const route_s journey) {
     // Allocate memory for the longest allowed box title.
     char title[BOX_WIDTH];
 
@@ -144,20 +136,15 @@ void print_journey(const route_s journey) {
 
     // Print 5 "center slices" of a box.
     for (int i = 0; i < 5; i++) {
-        print_left_side_of_box();
-        for (int j = 0; j < BOX_WIDTH; j++) {
-            printf(" ");
-        }
-        print_right_side_of_box();
+        print_middle_of_box();
     }
 
     // Change text color and go to the first "slice".
     set_win_color(wc_bright_white);
     printf("\033[5A");
 
-
+    // For every "slice".
     for (int i = 0; i < 5; i++) {
-        // For every "slice".
         // Go the first column and add padding.
         printf("\033[0G");
         printf("\033[%dC", 1 + BOX_PADDING);
@@ -169,10 +156,13 @@ void print_journey(const route_s journey) {
                 printf("To:\t\t\t%s (%s)", journey.destination, journey.destinationName);
                 break;
             case 2: // Print estimated travel time including downtime.
-                printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                if (journey.travelTime + journey.downtime >= 60) {
+                    printf("Est. travel time:\t%d hour(s) and %d minutes", (journey.travelTime + journey.downtime) / 60, (journey.travelTime + journey.downtime) % 60);
+                } else {
+                    printf("Est. travel time:\t%d minutes", journey.travelTime + journey.downtime);
+                }
                 break;
             case 3: // Print price.
-                // TODO: Vis tid i timer og minutter.
                 printf("Price:\t\t%.2lf EUR", journey.price / 100.0);
                 break;
             case 4: // Print emission.
@@ -189,6 +179,25 @@ void print_journey(const route_s journey) {
 
     // Move cursor to the first column and print bottom of box.
     printf("\033[0G");
+    print_bottom_of_box();
+}
+
+void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) {
+    print_top_of_box("Alternative journeys");
+    print_middle_of_box();
+    set_win_color(wc_bright_white);
+    printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+    printf("Vehicle\tTime\tPrice\t\tEmission\n");
+    for (int i = 0; i < numberOfJourneys; i++) {
+        char journey[BOX_WIDTH];
+        print_middle_of_box();
+        set_win_color(wc_bright_white);
+        printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+        sprintf(journey, "%s\t%02d:%02d\t%.2lf EUR\t%d kg\n", journeys[i].transportType == 1 ? "Airplane" : "Train   ", (journeys[i].travelTime + journeys[i].downtime) / 60, (journeys[i].travelTime + journeys[i].downtime) % 60, journeys[i].price / 100.00,
+                journeys[i].emission);
+        printf(journey);
+    }
+
     print_bottom_of_box();
 }
 
@@ -472,6 +481,15 @@ void print_top_of_box(const char title[]) {
     printf("%c\n", 187);
 }
 
+void print_middle_of_box() {
+    set_win_color(wc_gray);
+    printf("%c", 186);
+    for (int i = 0; i < BOX_WIDTH + 2 * BOX_PADDING; i++) {
+        printf(" ");
+    }
+    printf("%c\n", 186);
+}
+
 void print_bottom_of_box() {
     set_win_color(wc_gray);
     printf("%c", 200);
@@ -481,22 +499,6 @@ void print_bottom_of_box() {
     printf("%c\n", 188);
 }
 
-void print_left_side_of_box() {
-    set_win_color(wc_gray);
-    printf("%c", 186);
-    for (int k = 0; k < BOX_PADDING; k++) {
-        printf(" ");
-    }
-}
-
-void print_right_side_of_box() {
-    set_win_color(wc_gray);
-    for (int k = 0; k < BOX_PADDING; k++) {
-        printf(" ");
-    }
-    printf("%c\n", 186);
-}
-
 int length_of_longest_word(const char message[]) {
     int lengthOfLongestWord = 0;
     int n = 0;
@@ -504,7 +506,8 @@ int length_of_longest_word(const char message[]) {
     // Look for spaces in message.
     for (int i = 0; i < strlen(message); i++) {
         if (message[i] == ' ') {
-            if (n > lengthOfLongestWord) { // If the distance between to spaces is greater than the previous distance, then update variable.
+            if (n > lengthOfLongestWord) {
+                // If the distance between to spaces is greater than the previous distance, then update variable.
                 lengthOfLongestWord = n;
             }
             n = 0;
