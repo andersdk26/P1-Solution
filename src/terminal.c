@@ -189,7 +189,7 @@ void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) 
     // Print table "categories".
     print_middle_of_box();
     set_win_color(wc_bright_white);
-    printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+    printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
     printf("Vehicle\tTime\tPrice\t\tEmission\n");
 
     // Print alternative journeys.
@@ -197,7 +197,7 @@ void print_alternative_journeys(route_s journeys[], const int numberOfJourneys) 
         char journey[BOX_WIDTH];
         print_middle_of_box();
         set_win_color(wc_bright_white);
-        printf("\033[1A\033[%dG", 1 + BOX_PADDING);
+        printf("\033[1A\033[0G\033[%dC", 1 + BOX_PADDING);
         sprintf(journey, "%s\t%02d:%02d\t%.2lf EUR\t%d kg\n", journeys[i].transportType == 1 ? "Airplane" : "Train   ", (journeys[i].travelTime + journeys[i].downtime) / 60, (journeys[i].travelTime + journeys[i].downtime) % 60, journeys[i].price / 100.00,
                 journeys[i].emission);
         printf(journey);
@@ -630,4 +630,3 @@ void print_error(const char *msg) {
 
     print_bottom_of_box();
 }
-
