@@ -159,7 +159,7 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
         int errorFlag = 0;
         const int travelTime = strtol_check(travelTimeStr, 10, &errorFlag);
         const int emission = (int) round(strtod_check(emissionStr, &errorFlag)); // Convert decimal to integer
-        const int price = (int) (strtod_check(priceStr, &errorFlag) * 100); // Convert price to 1/100
+        const int price = (int) round(strtod_check(priceStr, &errorFlag) * 100); // Convert price to 1/100
         const int downTime = strtol_check(downtimeStr, 10, &errorFlag);
 
         if (errorFlag) {
