@@ -6,7 +6,6 @@
 #include <string.h>
 #include <wchar.h>
 
-
 #include "general.h"
 
 HANDLE hstdin;

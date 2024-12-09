@@ -4,7 +4,6 @@
 #include <fcntl.h>
 
 #include "main.h"
-
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"

@@ -46,20 +46,21 @@ void delay(const clock_t millis) {
 
     const clock_t startTime = clock();
     // wait until time has passed
-    while (startTime + millis > clock()) {}
+    while (startTime + millis > clock()) {
+    }
 }
 
 /**
  * Prints warning (in yellow)
  * @param msg String to print
  */
-void print_warning(const char* msg) {
+void print_warning(const char *msg) {
     set_win_color(wc_yellow);
     printf("%s", msg);
     set_win_color(wc_default);
 }
 
-void check_input(const char* input) {
+void check_input(const char *input) {
     if (input == NULL) {
         print_error("Input error");
         exit(EXIT_FAILURE);
@@ -73,8 +74,8 @@ void check_input(const char* input) {
  * @param clear True if all values should be set to 0
  * @return Memory pointer
  */
-void* memory_allocation(void* p, const size_t size, const int clear) {
-    void* lastP = NULL;
+void *memory_allocation(void *p, const size_t size, const int clear) {
+    void *lastP = NULL;
 
     // Free if size < 1
     if (size < 1) {
@@ -86,12 +87,10 @@ void* memory_allocation(void* p, const size_t size, const int clear) {
         // New memory allocation
         if (clear) {
             p = calloc(size, 1);
-        }
-        else {
+        } else {
             p = malloc(size);
         }
-    }
-    else {
+    } else {
         // Expand memory allocation
         lastP = p; // Save last memory address to prevent memory leak if expansion fails
         p = realloc(p, size);
