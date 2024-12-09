@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <fcntl.h>
-#include <io.h>
 
 #include "main.h"
 

@@ -2,7 +2,6 @@
 
 #include <fcntl.h>
 #include <io.h>
-#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
