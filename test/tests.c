@@ -11,10 +11,13 @@ void test_remove_route();
 
 void test_sort_routes();
 
+void test_column_search();
+
 int main() {
     test_add_route();
     test_remove_route();
     test_sort_routes();
+    test_column_search();
 
     printf("Test done\n");
     return 0;
@@ -80,4 +83,28 @@ void test_remove_route() {
 
     assert(routes == NULL);
     assert(routesLength == 0);
+}
+
+void test_column_search() {
+    route_s *routes = NULL;
+    int quantity = 0;
+    get_all_routes("../data/test_routes.csv", tt_train, &routes, &quantity);
+    sort_routes(routes, quantity);
+    char **str = NULL;
+    int strLength = 0;
+
+    search_first_column("b", &str, &strLength, routes, quantity);
+    assert(strLength == 1);
+    assert(strcmp(str[0], "Berlin") == 0);
+
+    free_string_list(str, strLength, 1);
+    str = NULL;
+    strLength = 0;
+
+    search_second_column("berlin", "v", &str, &strLength, routes, quantity);
+    assert(strLength == 1);
+    assert(strcmp(str[0], "Vienna") == 0);
+
+    free_string_list(str, strLength, 1);
+    free_route_list(routes, quantity, 1);
 }
