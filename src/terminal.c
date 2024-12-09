@@ -2,11 +2,9 @@
 
 #include <fcntl.h>
 #include <io.h>
-#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
-
 
 #include "general.h"
 
@@ -57,7 +55,7 @@ void box_print(const char originalMessage[], const char title[]) {
         // Update previous index.
         previousBreakIndex = breakIndex;
 
-        // Move index to "next line".
+        // Move index to "next line" (and skip the space).
         breakIndex += BOX_WIDTH + 1;
     }
 
@@ -229,60 +227,48 @@ void get_priorities(int priorities[3]) {
     set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
-    // TODO: Gør så man kan gå tilbage i sine prioriteter. Skriv kommentarer.
-
     char c = '\0';
     int n = 0;
-    while (n < 3) {
-        while (c < 49 || c > 51 || priorities[(int) c - '1'] != -1) {
-            c = w_getchar();
+    while (1) {
+        c = w_getchar();
+
+        // If a priority is "empty" and the user types a valid number.
+        if (c >= 49 && c <= 51 && n < 3 && priorities[(int) c - '1'] == -1) {
+            // Set the priority to a number corresponding to the category.
+            priorities[(int) c - '1'] = n;
+
+            // Print user input to terminal and move cursor the correct position.
+            printf("%c", c);
+            if (n == 0) {
+                printf("\033[9C");
+            } else if (n == 1) {
+                printf("\033[10C");
+            }
+
+            n++;
+        } else if (c == ENTER && n == 3) {
+            // Break out of the while loop if the user presses enter.
+            break;
+        } else if (c == BSP && n > 0) {
+            // Delete number in category box in terminal.
+            if (n == 1) {
+                printf("\033[10D \033[1D");
+            } else if (n == 2) {
+                printf("\033[11D \033[1D");
+            } else if (n == 3) {
+                printf("\033[1D \033[1D");
+            }
+
+            // "Clear" category from priority array.
+            for (int i = 0; i < 3; ++i) {
+                if (priorities[i] == n - 1) {
+                    priorities[i] = -1;
+                }
+            }
+
+            n--;
         }
-        priorities[(int) c - '1'] = n;
-        printf("%c", c);
-        c = '\0';
-        n++;
-
-        if (n == 1) {
-            printf("\033[9C");
-        } else if (n == 2) {
-            printf("\033[10C");
-        }
     }
-
-    /*
-
-    // Get priority for time.
-    char p = '\0';
-    while (p < 49 || p > 51) {
-        p = getchar();
-    }
-    priorities[(int) p - '1'] = p_time;
-    printf("%c", p);
-    p = '\0';
-
-    // Move cursor to the second box.
-    printf("\033[9C");
-
-    // Get priority for price.
-    while (p < 49 || p > 51 || priorities[(int) p - '1'] != -1) {
-        p = getchar();
-    }
-    priorities[(int) p - '1'] = p_price;
-    printf("%c", p);
-    p = '\0';
-
-    // Move cursor to the third box.
-    printf("\033[10C");
-
-    // Get priority for emission.
-    while (p < 49 || p > 51 || priorities[(int) p - '1'] != -1) {
-        p = getchar();
-    }
-    priorities[(int) p - '1'] = p_emission;
-    printf("%c", p);
-    p = '\0';
-
-    */
 
     // Move cursor out of the box and change text color.
     printf("\033[2B");
@@ -674,7 +660,7 @@ void loading_bar(const int mode) {
             putchar(' ');
         }
         printf("\033[G");
-    } else if (mode == 1 && clock() >= lastUpdate + interval)  {
+    } else if (mode == 1 && clock() >= lastUpdate + interval) {
         // Save time of drawing
         lastUpdate = clock();
 
@@ -699,17 +685,16 @@ void loading_bar(const int mode) {
             } else {
                 putchar(' ');
             }
-
         }
         set_win_color(wc_default);
         putchar(']');
         putchar('\n');
 
-        progress = (progress+1) % size;
+        progress = (progress + 1) % size;
     }
 }
 
-void utf8_print(const wchar_t* utf8Str) {
+void utf8_print(const wchar_t *utf8Str) {
     static int firstRunFlag = 1;
     static UINT initialCodeSpace;
 
