@@ -65,7 +65,8 @@ The best trip for you is:
 - Budget: 150 euro
 ```
 ## Example
-Det skal Tobias sætte ind. 
+Below is an example of an interaction with the program.
+![Example](/Attachments/example.png)
 
 ## License
 
