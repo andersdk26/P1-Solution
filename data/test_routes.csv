@@ -1,6 +1,6 @@
 locationA,locationB,airportA,airportB,travelTimeInMinutes,emissionsPerPassenger,price,downtime
-Amsterdam,London,AMS,LHR,80,90,100,1
-Berlin,Warsaw,BER,WAW,80,90,100,1
-Oslo,Stockholm,OSL,ARN,80,90,100,1
-Berlin,Vienna,BER,VIE,80,90,100,1
-London,Amsterdam,LHR,AMS,80,90,100,1
+Amsterdam,London,AMS,LHR,34,84,128,0
+Berlin,Warsaw,BER,WAW,54,58,158,0
+Oslo,Stockholm,OSL,ARN,24,39,139,0
+Berlin,Vienna,BER,VIE,45,28,184,0
+London,Amsterdam,LHR,AMS,93,58,138,0

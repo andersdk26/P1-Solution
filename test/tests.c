@@ -13,11 +13,14 @@ void test_sort_routes();
 
 void test_column_search();
 
+void test_sort_trips();
+
 int main() {
     test_add_route();
     test_remove_route();
     test_sort_routes();
     test_column_search();
+    test_sort_trips();
 
     printf("Test done\n");
     return 0;
@@ -106,5 +109,27 @@ void test_column_search() {
     assert(strcmp(str[0], "Vienna") == 0);
 
     free_string_list(str, strLength, 1);
+    free_route_list(routes, quantity, 1);
+}
+
+void test_sort_trips() {
+    route_s *routes = NULL;
+    int quantity = 0;
+    get_all_routes("../data/test_routes.csv", tt_train, &routes, &quantity);
+    sort_routes(routes, quantity);
+    int priorities[] = {1, 0, 2};
+
+    sort_trips(routes, quantity, priorities);
+    assert(strcmp(routes[0].origin, "Amsterdam") == 0);
+    assert(strcmp(routes[1].origin, "London") == 0);
+    assert(strcmp(routes[2].origin, "Oslo") == 0);
+
+    priorities[0] = 0;
+    priorities[1] = 1;
+    sort_trips(routes, quantity, priorities);
+    assert(strcmp(routes[0].origin, "Oslo") == 0);
+    assert(strcmp(routes[1].origin, "Amsterdam") == 0);
+    assert(strcmp(routes[2].origin, "Berlin") == 0);
+
     free_route_list(routes, quantity, 1);
 }
