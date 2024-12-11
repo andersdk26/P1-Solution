@@ -117,15 +117,15 @@ void test_sort_trips() {
     int quantity = 0;
     get_all_routes("../data/test_routes.csv", tt_train, &routes, &quantity);
     sort_routes(routes, quantity);
-    int priorities[] = {1, 0, 2};
+    int priorities[] = {p_price, p_time, p_emission};
 
     sort_trips(routes, quantity, priorities);
     assert(strcmp(routes[0].origin, "Amsterdam") == 0);
     assert(strcmp(routes[1].origin, "London") == 0);
     assert(strcmp(routes[2].origin, "Oslo") == 0);
 
-    priorities[0] = 0;
-    priorities[1] = 1;
+    priorities[0] = p_time;
+    priorities[1] = p_price;
     sort_trips(routes, quantity, priorities);
     assert(strcmp(routes[0].origin, "Oslo") == 0);
     assert(strcmp(routes[1].origin, "Amsterdam") == 0);
