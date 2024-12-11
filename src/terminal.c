@@ -224,7 +224,7 @@ void get_priorities(int priorities[3]) {
     set_win_color(wc_bright_white);
 
     // Set terminal settings.
-    set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+    set_terminal_mode(ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
     char c = '\0';
@@ -290,7 +290,7 @@ void read_characters(char *input, const route_s *routes, const int routeQuantity
     input[i] = '\0';
 
     // Prepare terminal for autocomplete.
-    set_terminal_mode(ENABLE_WINDOW_INPUT | ENABLE_VIRTUAL_TERMINAL_INPUT
+    set_terminal_mode(ENABLE_VIRTUAL_TERMINAL_INPUT
                       ,ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
     while (1) {
