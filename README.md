@@ -31,25 +31,29 @@ Follow these steps to compile and run the program:
    start P1_Solution.exe
    ```
 ## Usage
-When you run the program, you will be prompted to rate your preferences for each parameter on a scale from 1 to 5:
+When you run the program, you will be prompted to enter your start and end destinations. 
+Afterward, you will rank your preferences for each parameter on a scale from 1 to 3:
 
 1. **Time:** How much time you are willing to spend on the trip.
-    - 1: Very short (few hours)
-    - 5: Long (several days)
+    - 1: Very short
+    - 2: Moderate
+    - 3: Long
 
 2. **Price:** How important budget considerations are to you.
     - 1: Budget is not important
-    - 5: Very strict budget
+    - 2: Moderate budget awareness
+    - 3: Very strict budget
 
 3. **Environmental Impact:** How much you prioritize eco-friendly options.
     - 1: Low priority for environmental impact
-    - 5: High priority for eco-friendliness
+    - 2: Moderate priority for environmental impact
+    - 3: High priority for environmental impact
 
-The program evaluates your ratings and suggests the best trip based on these preferences.
+The program evaluates your answers and suggests the best trip based on these preferences.
 
 ### Input and Output
 **Input:**  
-Users rate each parameter (time, price, and environmental impact) from 1 to 5.
+Users rank each parameter (time, price, and environmental impact) from 1 to 3.
 
 **Output:**  
 The program suggests an optimal trip, such as:
@@ -61,7 +65,8 @@ The best trip for you is:
 - Budget: 150 euro
 ```
 ## Example
-Det skal Tobias sætte ind. 
+Below is an example of an interaction with the program.
+![Example](/Attachments/example.png)
 
 ## License
 

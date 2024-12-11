@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <fcntl.h>
-#include <io.h>
 
 #include "main.h"
-
 #include "dataHandling.h"
 #include "general.h"
 #include "terminal.h"

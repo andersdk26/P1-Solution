@@ -10,17 +10,17 @@
  * @param list List of routes
  * @param length Length of list
  */
-void print_routes(const route_s* list, const int length) {
+void print_routes(const route_s *list, const int length) {
     set_win_color(wc_default);
     printf("Printing %d routes:\n", length);
 
     printf("%-12s" "%-12s" "%7s" "%8s" "%9s" "\n",
-            "Origin", "Destination", "Time", "Price", "Emission");
+           "Origin", "Destination", "Time", "Price", "Emission");
 
     // Prints all routes
     for (int i = 0; i < length; ++i) {
         printf("%-12s" "%-12s" "  %5d" "  %6.2lf" "   %5d" "\n",
-            list[i].origin, list[i].destination, list[i].travelTime, (double)list[i].price / 100, list[i].emission);
+               list[i].origin, list[i].destination, list[i].travelTime, (double) list[i].price / 100, list[i].emission);
     }
 }
 
@@ -131,7 +131,7 @@ void get_all_routes(const char *fileName, const transportType_e transportType, r
 
         // Split line in substrings
         char originStr[50], destinationStr[50], originNameStr[50], destinationNameStr[50],
-            travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
+                travelTimeStr[10], emissionStr[10], priceStr[10], downtimeStr[10];
         sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%s",
                originStr, destinationStr, originNameStr, destinationNameStr,
                travelTimeStr, emissionStr, priceStr, downtimeStr);
@@ -318,7 +318,7 @@ int alphabetic_route_compare(const void *vp1, const void *vp2) {
     return stricmp(route1->destination, route2->destination);
 }
 
-void sort_routes(route_s* routes, const int routeQuantity) {
+void sort_routes(route_s *routes, const int routeQuantity) {
     qsort(routes, routeQuantity, sizeof(route_s), alphabetic_route_compare);
 
     // Delete loading bar
